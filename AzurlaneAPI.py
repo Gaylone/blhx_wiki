@@ -1,0 +1,661 @@
+import os
+import random
+
+from PIL import Image
+from azurlane import AzurAPI
+from bs4 import BeautifulSoup
+
+SAVE_PATH = os.path.dirname(__file__)
+"""
+方法名：get_ship_data_by_name
+参数：name(string)
+返回值：result(字典)
+说明：该方法作用是通过碧蓝航线api，用舰船名称获取舰船数据，返回一个数据字典供html适配数据调用
+"""
+
+
+def get_ship_data_by_name(name):
+    api = AzurAPI()
+    api.updater.update()
+    result = api.getShipByChineseName(str(name))  # 返回一个字典
+    return result
+
+
+"""
+方法名：format_data_into_html
+参数：data(字典)
+返回值：无
+说明：该方法作用是通过传入的舰船数据字典，用beautifulsoup适配数据到html
+"""
+
+
+def format_data_into_html(data):
+    # 读入html备用
+    soup = BeautifulSoup(
+        open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_temp.html')), encoding='UTF-8'),
+        "lxml")
+
+    # 船名
+    ship_name = str(data['names']['code']) + "【" + str(data['names']['cn']) + "】"
+    soup.find(id='ship_name').string = ship_name
+
+    # 头像 avatar = "<img src='" + str(data['thumbnail']) + "'/>"
+    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src=str(data['thumbnail']).replace(
+        "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")))
+
+    # 建造时长
+    building_time = str(data['construction']['constructionTime'])
+    soup.find(id='building_time').string = building_time
+
+    # id
+    id = str(data['id'])
+    soup.find(id='id').string = id
+
+    # 稀有度
+    rarity = str(data['rarity'])
+    if rarity == 'Priority':
+        # rarity = "<img src='rate_icon/75px-Priority.png'/><br/>最高方案★★★★★★"
+        soup.find(id='rarity').string = ''
+        soup.find(id='rarity').append(soup.new_tag("img", src="rate_icon/75px-Priority.png"))
+        soup.find(id='rarity')['style'] = "background-color:PaleGoldenrod"
+        soup.find(id='avatar')['style'] = "background-color:PaleGoldenrod"
+        soup.find(id='rarity').append(soup.new_tag("br"))
+        soup.find(id='rarity').append("最高方案★★★★★★")
+    if rarity == 'Decisive':
+        # rarity = "<img src='rate_icon/50px-Decisive.png'/><br/>决战方案★★★★★★"
+        soup.find(id='rarity').string = ''
+        soup.find(id='rarity').append(soup.new_tag("img", src="rate_icon/50px-Decisive.png"))
+        soup.find(id='rarity')['style'] = "background-image:url('rate_icon/UR_BG.png')"
+        soup.find(id='avatar')['style'] ="background-image:url('rate_icon/UR_BG.png')"
+        soup.find(id='rarity').append(soup.new_tag("br"))
+        soup.find(id='rarity').append("决战方案★★★★★★")
+    if rarity == 'Elite':
+        # rarity = "<img src='rate_icon/50px-Elite.png'/><br/>精锐★★★★★"
+        soup.find(id='rarity').string = ''
+        soup.find(id='rarity').append(soup.new_tag("img", src="rate_icon/50px-Elite.png"))
+        soup.find(id='rarity')['style'] = "background-color:Plum"
+        soup.find(id='avatar')['style'] = "background-color:Plum"
+        soup.find(id='rarity').append(soup.new_tag("br"))
+        soup.find(id='rarity').append("精锐★★★★★")
+    if rarity == 'Super Rare':
+        # rarity = "<img src='rate_icon/50px-SuperRare.png'/><br/>超稀有★★★★★★"
+        soup.find(id='rarity').string = ''
+        soup.find(id='rarity').append(soup.new_tag("img", src="rate_icon/50px-SuperRare.png"))
+        soup.find(id='rarity')['style'] = "background-color:PaleGoldenrod"
+        soup.find(id='avatar')['style'] = "background-color:PaleGoldenrod"
+        soup.find(id='rarity').append(soup.new_tag("br"))
+        soup.find(id='rarity').append("超稀有★★★★★★")
+    if rarity == 'Ultra Rare':
+        # rarity = "<img src='rate_icon/50px-UltraRare.png'/><br/>海上传奇★★★★★★"
+        soup.find(id='rarity').string = ''
+        soup.find(id='rarity').append(soup.new_tag("img", src="rate_icon/50px-UltraRare.png"))
+        soup.find(id='rarity').append(soup.new_tag("br"))
+        soup.find(id='rarity')['style'] = "background-image:url('rate_icon/UR_BG.png')"
+        soup.find(id='avatar')['style'] = "background-image:url('rate_icon/UR_BG.png');"
+        soup.find(id='rarity').append("海上传奇★★★★★★")
+    if rarity == 'Rare':
+        # rarity = "<img src='rate_icon/50px-Rare.png'/><br/>稀有★★★★★"
+        soup.find(id='rarity').string = ''
+        soup.find(id='rarity').append(soup.new_tag("img", src="rate_icon/50px-Rare.png"))
+        soup.find(id='rarity')['style'] = "background-color:PowderBlue"
+        soup.find(id='avatar')['style'] = "background-color:PowderBlue"
+        soup.find(id='rarity').append(soup.new_tag("br"))
+        soup.find(id='rarity').append("稀有★★★★★")
+    if rarity == 'Normal':
+        rarity = "<img src='rate_icon/50px-Rarity_Normal.png'/><br/>普通★★★★"
+        soup.find(id='rarity').string = ''
+        soup.find(id='rarity').append(soup.new_tag("img", src="rate_icon/50px-Rarity_Normal.png"))
+        soup.find(id='rarity')['style'] = "background-color:Gainsboro"
+        soup.find(id='avatar')['style'] = "background-color:Gainsboro"
+        soup.find(id='rarity').append(soup.new_tag("br"))
+        soup.find(id='rarity').append("普通★★★★")
+    # 阵营
+    faction = str(data['nationality'])
+    if faction == 'Sakura Empire':
+        # faction = "<img src='faction_icon/50px-Jp_1.png'/>重樱"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Jp_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("重樱")
+    if faction == 'Universal':
+        # faction = "<img src='faction_icon/50px-Cm_1.png'/>突破材料"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Cm_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("突破材料")
+    if faction == 'Eagle Union':
+        # faction = "<img src='faction_icon/50px-Us_1.png'/>白鹰"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Us_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("白鹰")
+    if faction == 'Royal Navy':
+        # faction = "<img src='faction_icon/50px-En_1.png'/>皇家"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-En_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("皇家")
+    if faction == 'Venus Vacation':
+        # faction = "<img src='faction_icon/50px-Um_1.png'/>沙滩排球"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("沙滩排球")
+    if faction == 'Iron Blood':
+        # faction = "<img src='faction_icon/50px-De_1.png'/>铁血"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-De_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("铁血")
+    if faction == 'Dragon Empery':
+        # faction = "<img src='faction_icon/50px-Cn_1.png'/>东煌"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Cn_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("东煌")
+    if faction == 'Vichya Dominion':
+        # faction = "<img src='faction_icon/50px-Vf_1.png'/>维希教廷"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Vf_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("维希教廷")
+    if faction == 'Sardegna Empire':
+        # faction = "<img src='faction_icon/50px-Rn_1.png'/>撒丁帝国"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Rn_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("撒丁帝国")
+    if faction == 'Bilibili':
+        # faction = "<img src='faction_icon/50px-Bi_1.png'/>哔哩哔哩"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Bi_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("哔哩哔哩")
+    if faction == 'Utawarerumono':
+        # faction = "<img src='faction_icon/50px-Um_1.png'/>传颂之物"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("传颂之物")
+    if faction == 'Northern Parliament':
+        # faction = "<img src='faction_icon/50px-Northunion_orig.png'/>北方联合"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Northunion_orig.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("北方联合")
+    if faction == 'META':
+        # faction = "<img src='faction_icon/50px-Meta_1.png'/>META"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Meta_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("META")
+    if faction == 'Neptunia':
+        # faction = "<img src='faction_icon/50px-Np_1.png'/>海王星"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Np_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("海王星")
+    if faction == 'Hololive':
+        # faction = "<img src='faction_icon/50px-Um_1.png'/>Hololive"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("Hololive")
+    if faction == 'KizunaAI':
+        # faction = "<img src='faction_icon/50px-Um_1.png'/>KizunaAI"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("KizunaAI")
+    if faction == 'The Idolmaster':
+        faction = "<img src='faction_icon/50px-Um_1.png'/>偶像大师"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("偶像大师")
+    if faction == 'Iris Libre':
+        faction = "<img src='faction_icon/50px-Ff_1.png'/>自由鸢尾"
+        soup.find(id='faction').string = ''
+        soup.find(id='faction').append(soup.new_tag("img", src="faction_icon/50px-Ff_1.png"))
+        soup.find(id='faction').append(soup.new_tag("br"))
+        soup.find(id='faction').append("自由鸢尾")
+    # 舰种舰级
+    class_ = str(data['class'])
+    soup.find(id='class').string = class_
+    type = str(data['hullType'])
+    if type == 'Aircraft Carrier':
+        # type = "<img src='type_icon/30px-CV_img40.png'/> 航空母舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CV_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("航空母舰")
+    if type == 'Destroyer':
+        # type = "<img src='type_icon/30px-DD_img40.png'/> 驱逐舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-DD_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("驱逐舰")
+    if type == 'Light Cruiser':
+        # type = "<img src='type_icon/30px-CL_img40.png'/> 轻型巡洋舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CL_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("轻型巡洋舰")
+    if type == 'Heavy Cruiser':
+        # type = "<img src='type_icon/30px-CA_img40.png'/> 重型巡洋舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CA_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("重型巡洋舰")
+    if type == 'Battleship':
+        # type = "<img src='type_icon/30px-BB_img40.png'/> 战列舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-BB_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("战列舰")
+    if type == 'Light Carrier':
+        # type = "<img src='type_icon/30px-CVL_img40.png'/> 轻型航空母舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CVL_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("轻型航空母舰")
+    if type == 'Repair':
+        # type = "<img src='type_icon/30px-AR_img40.png'/> 维修舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-AR_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("维修舰")
+    if type == 'Battlecruiser':
+        # type = "<img src='type_icon/30px-BC_img40.png'/> 战列巡洋舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-BC_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("战列巡洋舰")
+    if type == 'Monitor':
+        # type = "<img src='type_icon/30px-BM_img40.png'/> 浅水重炮舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-BM_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("浅水重炮舰")
+    if type == 'Submarine':
+        # type = "<img src='type_icon/30px-SS_img40.png'/> 潜艇"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-SS_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("潜艇")
+    if type == 'Submarine Carrier':
+        # type = "<img src='type_icon/30px-SSV_img40.png'/> 潜水母舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-SSV_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("潜水母舰")
+    if type == 'Munition Ship':
+        # type = "<img src='type_icon/30px-AE_img40.png'/> 运输舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-AE_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("运输舰")
+    if type == 'Large Cruiser':
+        # type = "<img src='type_icon/30px-CB_img40.png'/> 超级巡洋舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CB_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("超级巡洋舰")
+    if type == 'Aviation Battleship':
+        # type = "<img src='type_icon/30px-BBV_img40.png'/> 航空战列舰"
+        soup.find(id='type').string = ''
+        soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-BBV_img40.png"))
+        soup.find(id='type').append(soup.new_tag("br"))
+        soup.find(id='type').append("航空战列舰")
+
+    # 声优和画师
+    artist = str(data['misc']['artist']['name'])
+    soup.find(id='artist').string = artist
+    if data['misc']['voice'] is not None:
+        cv = str(data['misc']['voice']['name'])
+        soup.find(id='cv').string = cv
+    else:
+        soup.find(id='cv').string = '暂无'
+
+    # 120级满破数据
+    duration_120 = str(data['stats']['level120']['health'])  # HP
+    soup.find(id='duration-120').string = duration_120
+    armor_120 = str(data['stats']['level120']['armor'])  # 装甲
+    if armor_120 == 'Heavy':
+        soup.find(id='armor-120').string = '重型'
+    if armor_120 == 'Light':
+        soup.find(id='armor-120').string = '轻型'
+    if armor_120 == 'Medium':
+        soup.find(id='armor-120').string = '中型'
+    refill_120 = str(data['stats']['level120']['reload'])  # 装填
+    soup.find(id='refill-120').string = refill_120
+    luck_120 = str(data['stats']['level120']['luck'])  # 幸运
+    soup.find(id='luck-120').string = luck_120
+    firepower_120 = str(data['stats']['level120']['firepower'])  # 炮击
+    soup.find(id='firepower-120').string = firepower_120
+    torpedo_120 = str(data['stats']['level120']['torpedo'])  # 雷击
+    soup.find(id='torpedo-120').string = torpedo_120
+    evasion_120 = str(data['stats']['level120']['evasion'])  # 机动
+    soup.find(id='evasion-120').string = evasion_120
+    speed_120 = str(data['stats']['level120']['speed'])  # 航速
+    soup.find(id='speed-120').string = speed_120
+    antiAir_120 = str(data['stats']['level120']['antiair'])  # 防空
+    soup.find(id='antiAir-120').string = antiAir_120
+    aviation_120 = str(data['stats']['level120']['aviation'])  # 航空
+    soup.find(id='aviation-120').string = aviation_120
+    consumption_120 = str(data['stats']['level120']['oilConsumption'])  # 油耗
+    soup.find(id='consumption-120').string = consumption_120
+    hit_120 = str(data['stats']['level120']['accuracy'])  # 命中
+    soup.find(id='hit-120').string = hit_120
+    asw_120 = str(data['stats']['level120']['antisubmarineWarfare'])  # 反潜
+    soup.find(id='asw-120').string = asw_120
+
+    # 100级满破数据
+    duration_100 = str(data['stats']['level100']['health'])
+    soup.find(id='duration-100').string = duration_100
+    armor_100 = str(data['stats']['level100']['armor'])
+    if armor_100 == 'Heavy':
+        soup.find(id='armor-100').string = '重型'
+    if armor_100 == 'Light':
+        soup.find(id='armor-100').string = '轻型'
+    if armor_100 == 'Medium':
+        soup.find(id='armor-100').string = '中型'
+    refill_100 = str(data['stats']['level100']['reload'])
+    soup.find(id='refill-100').string = refill_100
+    luck_100 = str(data['stats']['level100']['luck'])
+    soup.find(id='luck-100').string = luck_100
+    firepower_100 = str(data['stats']['level100']['firepower'])
+    soup.find(id='firepower-100').string = firepower_100
+    torpedo_100 = str(data['stats']['level100']['torpedo'])
+    soup.find(id='torpedo-100').string = torpedo_100
+    evasion_100 = str(data['stats']['level100']['evasion'])
+    soup.find(id='evasion-100').string = evasion_100
+    speed_100 = str(data['stats']['level100']['speed'])
+    soup.find(id='speed-100').string = speed_100
+    antiAir_100 = str(data['stats']['level100']['antiair'])
+    soup.find(id='antiAir-100').string = antiAir_100
+    aviation_100 = str(data['stats']['level100']['aviation'])
+    soup.find(id='aviation-100').string = aviation_100
+    consumption_100 = str(data['stats']['level100']['oilConsumption'])
+    soup.find(id='consumption-100').string = consumption_100
+    hit_100 = str(data['stats']['level100']['accuracy'])
+    soup.find(id='hit-100').string = hit_100
+    asw_100 = str(data['stats']['level100']['antisubmarineWarfare'])
+    soup.find(id='asw-100').string = asw_100
+    # 基础数据
+    duration = str(data['stats']['baseStats']['health'])
+    soup.find(id='duration-1').string = duration
+    armor = str(data['stats']['baseStats']['armor'])
+    if armor == 'Heavy':
+        soup.find(id='armor-1').string = '重型'
+    if armor == 'Light':
+        soup.find(id='armor-1').string = '轻型'
+    if armor == 'Medium':
+        soup.find(id='armor-1').string = '中型'
+    refill = str(data['stats']['baseStats']['reload'])
+    soup.find(id='refill-1').string = refill
+    luck = str(data['stats']['baseStats']['luck'])
+    soup.find(id='luck-1').string = luck
+    firepower = str(data['stats']['baseStats']['firepower'])
+    soup.find(id='firepower-1').string = firepower
+    torpedo = str(data['stats']['baseStats']['torpedo'])
+    soup.find(id='torpedo-1').string = torpedo
+    evasion = str(data['stats']['baseStats']['evasion'])
+    soup.find(id='evasion-1').string = evasion
+    speed = str(data['stats']['baseStats']['speed'])
+    soup.find(id='speed-1').string = speed
+    antiAir = str(data['stats']['baseStats']['antiair'])
+    soup.find(id='antiAir-1').string = antiAir
+    aviation = str(data['stats']['baseStats']['aviation'])
+    soup.find(id='aviation-1').string = aviation
+    consumption = str(data['stats']['baseStats']['oilConsumption'])
+    soup.find(id='consumption-1').string = consumption
+    hit = str(data['stats']['baseStats']['accuracy'])
+    soup.find(id='hit-1').string = hit
+    asw = str(data['stats']['baseStats']['antisubmarineWarfare'])
+    soup.find(id='asw-1').string = asw
+
+    # 1号栏武器装备
+    slots_1_efficiency = str(data['slots'][0]['minEfficiency']) + "% → " + str(data['slots'][0]['maxEfficiency']) + "%"
+    soup.find(id='slots_1_efficiency').string = slots_1_efficiency
+    slots_1_equippable = str(data['slots'][0]['type'])
+    soup.find(id='slots_1_equippable').string = slots_1_equippable
+    slots_1_max = str(data['slots'][0]['max'])
+    soup.find(id='slots_1_max').string = slots_1_max
+
+    # 2号栏武器装备
+    slots_2_efficiency = str(data['slots'][1]['minEfficiency']) + "% → " + str(data['slots'][1]['maxEfficiency']) + "%"
+    soup.find(id='slots_2_efficiency').string = slots_2_efficiency
+    slots_2_equippable = str(data['slots'][1]['type'])
+    soup.find(id='slots_2_equippable').string = slots_2_equippable
+    slots_2_max = str(data['slots'][1]['max'])
+    soup.find(id='slots_2_max').string = slots_2_max
+
+    # 3号栏武器装备
+    slots_3_efficiency = str(data['slots'][2]['minEfficiency']) + "% → " + str(data['slots'][2]['maxEfficiency']) + "%"
+    soup.find(id='slots_3_efficiency').string = slots_3_efficiency
+    slots_3_equippable = str(data['slots'][2]['type'])
+    soup.find(id='slots_3_equippable').string = slots_3_equippable
+    slots_3_max = str(data['slots'][2]['max'])
+    soup.find(id='slots_3_max').string = slots_3_max
+
+    # 技能,各船技能数量不同，所以先返回数组再迭代处理
+    skills = data['skills']
+    skill_text = ''
+    soup.find(id='skill').clear()
+    for skill in skills:
+        skill_text += ("<tr><td ><img src='" + str(skill['icon']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "") \
+                       + "' width='60px' height='60px'/>" + str(skill['names']['cn']) \
+                       + "</td></tr><tr><td>" + str(skill['description']) + "</td></tr>")
+    extraSoup = BeautifulSoup(skill_text, "lxml")
+    soup.find(id='skill').append(extraSoup)
+
+    # 突破,更恶心，二维数组,布里，科研船，普通船都不一样
+    breaks = data.get("limitBreaks", -1)
+    soup.find(id='break').string = ''
+    if breaks is not None and breaks != -1:
+        breaks_tr_body = ''
+        break_text = []
+        break_1 = break_2 = break_3 = ''
+        for break_ in breaks[0]:
+            break_1 += ("●" + str(break_) + "<br>")
+        break_text.append(break_1)
+        for break_ in breaks[1]:
+            break_2 += ("●" + str(break_) + "<br>")
+        break_text.append(break_2)
+        for break_ in breaks[2]:
+            break_3 += ("●" + str(break_) + "<br>")
+        break_text.append(break_3)
+        for i in range(0, 3):
+            breaks_tr_body += (
+                    "<tr><th colspan='1' scope='col' width='80px'>" + str(i) + "破</th><td colspan='2'>" + str(
+                break_text[i]) + "</td></tr>")
+        breaksoup = BeautifulSoup(breaks_tr_body,'lxml')
+        soup.find(id='break').append(breaksoup)
+
+    elif breaks == -1:
+        breaks = data["devLevels"]  # 数组
+        breaks_tr_body = ''
+        break_text = []
+        break_1 = break_2 = break_3 = break_4 = break_5 = break_6 = ''
+        for break_ in breaks[0]['buffs']:
+            break_1 += ("●" + str(break_) + "<br>")
+        break_text.append(break_1)
+        for break_ in breaks[1]['buffs']:
+            break_2 += ("●" + str(break_) + "<br>")
+        break_text.append(break_2)
+        for break_ in breaks[2]['buffs']:
+            break_3 += ("●" + str(break_) + "<br>")
+        break_text.append(break_3)
+        for break_ in breaks[3]['buffs']:
+            break_4 += ("●" + str(break_) + "<br>")
+        break_text.append(break_4)
+        for break_ in breaks[4]['buffs']:
+            break_5 += ("●" + str(break_) + "<br>")
+        break_text.append(break_5)
+        for break_ in breaks[5]['buffs']:
+            break_6 += ("●" + str(break_) + "<br>")
+        break_text.append(break_6)
+        for i in range(0, 6):
+            breaks_tr_body += (
+                    "<tr><th colspan='1' scope='col' width='80px'>科研" + str(
+                (i + 1) * 5) + "级</th><td colspan='2'>" + str(break_text[i]) + "</td></tr>")
+        breaksoup = BeautifulSoup(breaks_tr_body, "html.parser")
+        soup.find(id='break').append(breaksoup)
+    else:
+        new_tag = soup.new_tag("tr")
+        new_tag.string = '不可突破'
+        soup.find(id='break').append(new_tag)
+
+    # 科技点
+    # collection = "<img src='res_icon/25px-TechPoint.png'/>" + str(data['fleetTech']['techPoints']['collection'])
+    soup.find(id='collection').string = ''
+    soup.find(id='collection').append(soup.new_tag('img', src='res_icon/25px-TechPoint.png'))
+    soup.find(id='collection').append(str(data['fleetTech']['techPoints']['collection']))
+    # maxLB = "<img src='res_icon/25px-TechPoint.png'/>" + str(data['fleetTech']['techPoints']['maxLimitBreak'])
+    soup.find(id='maxLB').string = ''
+    soup.find(id='maxLB').append(soup.new_tag('img', src='res_icon/25px-TechPoint.png'))
+    soup.find(id='maxLB').append(str(data['fleetTech']['techPoints']['maxLimitBreak']))
+    # lv120 = "<img src='res_icon/25px-TechPoint.png'/>" + str(data['fleetTech']['techPoints']['maxLevel'])
+    soup.find(id='lv120').string = ''
+    soup.find(id='lv120').append(soup.new_tag('img', src='res_icon/25px-TechPoint.png'))
+    soup.find(id='lv120').append(str(data['fleetTech']['techPoints']['maxLevel']))
+    # total = "<img src='res_icon/25px-TechPoint.png'/>" + str(data['fleetTech']['techPoints']['total'])
+    soup.find(id='total').string = ''
+    soup.find(id='total').append(soup.new_tag('img', src='res_icon/25px-TechPoint.png'))
+    soup.find(id='total').append(str(data['fleetTech']['techPoints']['total']))
+    # 退役，有的船不能退役,能退役的就三种返现：油，钱，章
+    scrapValues = data['scrapValue']
+    coin = ""
+    oil = ""
+    medal = ""
+    if scrapValues is not None:
+        coin = str(data['scrapValue']['coin'])
+        soup.find(id='coin').string = coin
+        oil = str(data['scrapValue']['oil'])
+        soup.find(id='oil').string = oil
+        medal = str(data['scrapValue']['medal'])
+        soup.find(id='medal').string = medal
+    else:
+        soup.find(id='coin').string = soup.find(id='oil').string = soup.find(id='medal').string = "不可食用"
+
+    # 皮肤列表
+    skin_list=data['skins'] # 数组
+    skin_text = ''
+    soup.find(id='skin_list').string = ""
+    for skin in skin_list:
+        if skin['name'] == "Default" or skin['name'] == "Original Art":
+            continue
+        else:
+            live2d=''
+            if skin['info']['live2dModel'] == True:
+                live2d = "是"
+            else:
+                live2d = "否"
+            skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>"+str(skin['info']['cnClient'])+"</td><th  scope='col'width='80px'>Live2D</th><td>"+live2d+"</td></tr>")
+    extraSoup = BeautifulSoup(skin_text, "lxml")
+    soup.find(id='skin_list').append(extraSoup)
+
+    # 处理完毕，保存
+
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_info.html')),
+              'w', encoding="utf-8") as fp:
+        fp.write(str(soup.prettify()))
+
+
+"""
+方法名：get_ship_skin_by_name
+参数：ship_name(string),skin_name(string),if_chibi(string)
+返回值：0 / 1
+说明：该方法作用是通过碧蓝航线api，用舰船名称获取舰船皮肤数据，再调用openCV把图片合成，供机器人发送 ,成功0 失败1
+"""
+
+
+def get_ship_skin_by_name(ship_name, skin_name):
+    soup=BeautifulSoup(
+        open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+             encoding='UTF-8'),
+        "lxml")
+    result = get_ship_data_by_name(str(ship_name))
+    ship_skin_list = result['skins']
+    image_path = ''
+    background_path = ''
+    chibi_path = ''
+    # 处理原皮
+    if skin_name == '原皮':
+        image_path = str(ship_skin_list[0]['image']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+        background_path = str(ship_skin_list[0]['background']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+        chibi_path = str(ship_skin_list[0]['chibi']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+
+        soup.find(id='img-content')['style']="background-image: url('"+background_path+"')"
+        soup.find(id='img-content').string=''
+        soup.find(id='img-content').append(soup.new_tag('img',src=image_path,style="height: 720px"))
+        soup.find(id='img-content').append(soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
+        os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html'))
+        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                  'w', encoding="utf-8") as fp:
+            fp.write(str(soup.prettify()))
+        return 0
+
+    if len(ship_skin_list)<2:
+        return 1
+    if skin_name == '婚纱':
+        for skin in ship_skin_list:
+            if skin['name']=='Wedding':
+                image_path = str(skin['image']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                background_path = str(skin['background']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                chibi_path = str(skin['chibi']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
+                soup.find(id='img-content').string = ''
+                soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
+                soup.find(id='img-content').append(
+                    soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
+
+                with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                          'w', encoding="utf-8") as fp:
+                    fp.write(str(soup.prettify()))
+                return 0
+
+    # 处理普通皮肤
+    for i in range(1,len(ship_skin_list)):
+        if str(ship_skin_list[i]['name']) == 'Original Art':
+            continue
+        if str(ship_skin_list[i]['info']['cnClient']) == skin_name:
+            image_path = str(ship_skin_list[i]['image']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/","")
+            background_path = str(ship_skin_list[i]['background']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+            chibi_path = str(ship_skin_list[i]['chibi']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+            soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
+            soup.find(id='img-content').string = ''
+            soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
+            soup.find(id='img-content').append(
+                soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
+
+            with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                      'w', encoding="utf-8") as fp:
+                fp.write(str(soup.prettify()))
+            return 0
+        else:
+            continue
+    return 4
+
+
+
+"""
+方法名：get_random_gallery
+参数：无
+返回值：字符串
+说明：该方法随机返回游戏加载图像的随机文件名
+"""
+
+
+def get_random_gallery():
+    files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'images', 'gallery')))
+    rfile = random.choice(files)
+    return str(rfile)

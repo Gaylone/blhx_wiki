@@ -1,0 +1,262 @@
+{
+  'wikiUrl': 'https://azurlane.koumakan.jp/Kashino',
+  'id': '472',
+  '_gid': 31901,
+  '_sid': [
+    319011,
+    319012,
+    319013,
+    319014
+  ],
+  '_code': 472,
+  'names': {
+    'en': 'Kashino',
+    'code': 'IJN Kashino',
+    'cn': '樫野',
+    'jp': '樫野',
+    'kr': '카시노'
+  },
+  'exists': {
+    'en': True,
+    'cn': True,
+    'jp': True,
+    'kr': True
+  },
+  'hexagon': [
+    1,
+    0,
+    0,
+    1,
+    1,
+    3
+  ],
+  'class': 'Kashino',
+  'nationality': 'Sakura Empire',
+  'hullType': 'Destroyer',
+  'thumbnail': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/thumbnail.png',
+  'rarity': 'Elite',
+  'stars': {
+    'stars': '★★★★★',
+    'value': 5
+  },
+  'stats': {
+    'baseStats': {
+      'health': '823',
+      'armor': 'Light',
+      'reload': '75',
+      'luck': '58',
+      'firepower': '14',
+      'torpedo': '0',
+      'evasion': '10',
+      'speed': '14',
+      'antiair': '25',
+      'aviation': '0',
+      'oilConsumption': '3',
+      'accuracy': '73',
+      'antisubmarineWarfare': '0'
+    },
+    'level100': {
+      'health': '4256',
+      'armor': 'Light',
+      'reload': '177',
+      'luck': '58',
+      'firepower': '63',
+      'torpedo': '0',
+      'evasion': '25',
+      'speed': '14',
+      'antiair': '116',
+      'aviation': '0',
+      'oilConsumption': '10',
+      'accuracy': '191',
+      'antisubmarineWarfare': '0'
+    },
+    'level120': {
+      'health': '4980',
+      'armor': 'Light',
+      'reload': '204',
+      'luck': '58',
+      'firepower': '73',
+      'torpedo': '0',
+      'evasion': '51',
+      'speed': '14',
+      'antiair': '134',
+      'aviation': '0',
+      'oilConsumption': '10',
+      'accuracy': '212',
+      'antisubmarineWarfare': '0'
+    }
+  },
+  'slots': [
+    {
+      'maxEfficiency': 110,
+      'minEfficiency': 90,
+      'type': 'DD Guns',
+      'max': 1
+    },
+    {
+      'maxEfficiency': 80,
+      'minEfficiency': 70,
+      'type': 'Anti-Air Guns',
+      'max': 1
+    },
+    {
+      'maxEfficiency': 100,
+      'minEfficiency': 100,
+      'type': 'Auxiliaries / Cargo',
+      'max': 1
+    }
+  ],
+  'enhanceValue': {
+    'firepower': 4,
+    'torpedo': 0,
+    'aviation': 0,
+    'reload': 14
+  },
+  'scrapValue': {
+    'coin': 4,
+    'oil': 3,
+    'medal': 4
+  },
+  'skills': [
+    {
+      'icon': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skills/472/robust_ballasts.png',
+      'names': {
+        'en': 'Robust Ballasts',
+        'cn': '损伤警备',
+        'jp': None
+      },
+      'description': "For her first 3 battles of each sortie, reduce Gun damage taken by self by 1% (10%). At start of battle, if fleet contains 2 or more Sakura Empire ships, increase own Speed by 10 [This skill's sortie battle counter resets when moving to a new area or changing your formation within Operation Siren.]",
+      'color': 'deepskyblue'
+    },
+    {
+      'icon': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skills/472/cargo_fire_precautions.png',
+      'names': {
+        'en': 'Cargo Fire Precautions',
+        'cn': '小心火焰！',
+        'jp': None
+      },
+      'description': 'When equipped with Transport Gear, reduce self burn damage taken by 5% (15%), and burn time by 3s (6s).',
+      'color': 'deepskyblue'
+    },
+    {
+      'icon': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skills/472/all_out_assault.png',
+      'names': {
+        'en': 'All Out Assault',
+        'cn': '全弹发射II',
+        'jp': None
+      },
+      'description': 'Every 15 (10) shots from the main battery, triggers Full Barrage - Kashino I (II).',
+      'color': 'pink'
+    }
+  ],
+  'limitBreaks': [
+    [
+      'Gains Full Barrage I',
+      'Main Gun Efficiency +5%'
+    ],
+    [
+      'Anti-Air Efficiency +10%'
+    ],
+    [
+      'Upgrades Full Barrage I→II',
+      'Main Gun Efficiency +15%'
+    ]
+  ],
+  'fleetTech': {
+    'statsBonus': {
+      'collection': {
+        'applicable': [
+          'Munition ship'
+        ],
+        'bonus': '+1',
+        'stat': 'health'
+      },
+      'maxLevel': {
+        'applicable': [
+          'Munition ship'
+        ],
+        'bonus': '+1',
+        'stat': 'health'
+      }
+    },
+    'techPoints': {
+      'collection': 6,
+      'maxLimitBreak': 12,
+      'maxLevel': 9,
+      'total': 27
+    }
+  },
+  'construction': {
+    'constructionTime': '01:30:00',
+    'availableIn': {
+      'light': False,
+      'heavy': False,
+      'aviation': False,
+      'limited': "Only during event: Dreamwaker's Butterfly",
+      'exchange': False
+    }
+  },
+  'obtainedFrom': {
+    'obtainedFrom': 'Available during "Dreamwaker\'s Butterfly" event.',
+    'fromMaps': []
+  },
+  'misc': {
+    'artist': {
+      'name': '全班最菜嘤嘤嘤',
+      'url': 'https://azurlane.koumakan.jp/Artists#.E5.85.A8.E7.8F.AD.E6.9C.80.E8.8F.9C.E5.98.A4.E5.98.A4.E5.98.A4'
+    },
+    'pixiv': None,
+    'twitter': {
+      'name': 'zelda10010',
+      'url': 'https://twitter.com/zelda10010'
+    },
+    'web': {
+      'name': '全班最菜嘤嘤嘤',
+      'url': 'https://weibo.com/u/7477949468'
+    },
+    'voice': {
+      'name': 'Reina Kondou',
+      'url': 'https://en.wikipedia.org/wiki/Reina_Kond%C5%8D'
+    }
+  },
+  'skins': [
+    {
+      'name': 'Default',
+      'image': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/Default/image.png',
+      'background': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/backgrounds/MainDayBG.png',
+      'chibi': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/Default/chibi.png',
+      'info': {
+        'live2dModel': False,
+        'obtainedFrom': 'Default'
+      }
+    },
+    {
+      'name': 'Hot Springs Relaxation',
+      'image': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/Hot_Springs_Relaxation/image.png',
+      'background': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/backgrounds/Skin_BG_106.png',
+      'chibi': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/Hot_Springs_Relaxation/chibi.png',
+      'info': {
+        'live2dModel': True,
+        'obtainedFrom': 'Skin Shop',
+        'enClient': 'Hot Springs Relaxation',
+        'cnClient': '温泉放松时间',
+        'jpClient': '湯上がりプレシュアタイム',
+        'cost': 1080
+      }
+    }
+  ],
+  'gallery': [
+    {
+      'description': 'Kii, Suzutsuki, Kumano, Kashino',
+      'url': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/gallery/Bg_2021.06.03_8.png'
+    },
+    {
+      'description': 'Amagi, Shinano, Kashino, Suzutsuki',
+      'url': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/gallery/Bg_2021.05.27_13.png'
+    },
+    {
+      'description': 'Chitose, Kashino (facing backwards), Kumano (Facing backwards), Kii, Shinano, Suzutsuki',
+      'url': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/gallery/Bg_2020.09.17_1.png'
+    }
+  ]
+}

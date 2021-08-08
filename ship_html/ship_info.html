@@ -1,0 +1,693 @@
+<html lang="zh-cn">
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Title
+  </title>
+  <script src="js/jquery-3.6.0.min.js">
+  </script>
+  <script src="js/bootstrap.min.js">
+  </script>
+  <link href="style.css" rel="stylesheet" type="text/css"/>
+  <link href="css/bootstrap.min.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <div class="table-content">
+   <table class="table table-bordered" id="head-info">
+    <thead class="thead-dark">
+     <tr>
+      <th colspan="5" id="ship_name" scope="col">
+       IJN Nagato【长门】
+      </th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <th id="avatar" rowspan="4" scope="row" style="background-color:PaleGoldenrod">
+       <img src="images/skins/212/thumbnail.png"/>
+      </th>
+      <th scope="row">
+       建造时间
+      </th>
+      <td id="building_time">
+       04:20:00
+      </td>
+      <th scope="row">
+       编号
+      </th>
+      <td id="id">
+       212
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       稀有程度
+      </th>
+      <td id="rarity" style="background-color:PaleGoldenrod">
+       <img src="rate_icon/50px-SuperRare.png"/>
+       <br/>
+       超稀有★★★★★★
+      </td>
+      <th scope="row">
+       阵营
+      </th>
+      <td id="faction">
+       <img src="faction_icon/50px-Jp_1.png"/>
+       重樱
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       舰船级别
+      </th>
+      <td id="class">
+       Nagato
+      </td>
+      <th scope="row">
+       类型
+      </th>
+      <td id="type">
+       <img src="type_icon/30px-BB_img40.png"/>
+       <br/>
+       战列舰
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship-info-120">
+    <thead class="thead-light">
+     <tr>
+      <th colspan="2" scope="col">
+       舰船信息(120级满破)
+      </th>
+      <td>
+       画师
+      </td>
+      <td colspan="2" id="artist">
+       Alisa
+      </td>
+      <td>
+       CV
+      </td>
+      <td colspan="2" id="cv">
+       Misaki Kuno
+      </td>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-Duration.png"/>
+      </th>
+      <td id="duration-120">
+       8117
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Armor.png"/>
+      </th>
+      <td id="armor-120">
+       重型
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Refill.png"/>
+      </th>
+      <td id="refill-120">
+       146
+      </td>
+      <th scope="row">
+       <img src="data_icon/24px-Luck.png"/>
+      </th>
+      <td id="luck-120">
+       71
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-Firepower.png"/>
+      </th>
+      <td id="firepower-120">
+       419
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Torpedo.png"/>
+      </th>
+      <td id="torpedo-120">
+       0
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Evasion.png"/>
+      </th>
+      <td id="evasion-120">
+       37
+      </td>
+      <th scope="row">
+       航速
+      </th>
+      <td id="speed-120">
+       25
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-AntiAir.png"/>
+      </th>
+      <td id="antiAir-120">
+       182
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Aviation.png"/>
+      </th>
+      <td id="aviation-120">
+       0
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Consumption.png"/>
+      </th>
+      <td id="consumption-120">
+       15
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Hit.png"/>
+      </th>
+      <td id="hit-120">
+       70
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-ASW.png"/>
+      </th>
+      <td id="asw-120">
+       0
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship-info-100">
+    <thead class="thead-light">
+     <tr>
+      <th colspan="8" scope="col">
+       舰船信息(100级满破)
+      </th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-Duration.png"/>
+      </th>
+      <td id="duration-100">
+       6955
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Armor.png"/>
+      </th>
+      <td id="armor-100">
+       重型
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Refill.png"/>
+      </th>
+      <td id="refill-100">
+       127
+      </td>
+      <th scope="row">
+       <img src="data_icon/24px-Luck.png"/>
+      </th>
+      <td id="luck-100">
+       71
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-Firepower.png"/>
+      </th>
+      <td id="firepower-100">
+       377
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Torpedo.png"/>
+      </th>
+      <td id="torpedo-100">
+       0
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Evasion.png"/>
+      </th>
+      <td id="evasion-100">
+       18
+      </td>
+      <th scope="row">
+       航速
+      </th>
+      <td id="speed-100">
+       25
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-AntiAir.png"/>
+      </th>
+      <td id="antiAir-100">
+       159
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Aviation.png"/>
+      </th>
+      <td id="aviation-100">
+       0
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Consumption.png"/>
+      </th>
+      <td id="consumption-100">
+       15
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Hit.png"/>
+      </th>
+      <td id="hit-100">
+       56
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-ASW.png"/>
+      </th>
+      <td id="asw-100">
+       0
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship-info-1">
+    <thead class="thead-light">
+     <tr>
+      <th colspan="8" scope="col">
+       舰船信息(1级0破)
+      </th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-Duration.png"/>
+      </th>
+      <td id="duration-1">
+       1345
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Armor.png"/>
+      </th>
+      <td id="armor-1">
+       重型
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Refill.png"/>
+      </th>
+      <td id="refill-1">
+       54
+      </td>
+      <th scope="row">
+       <img src="data_icon/24px-Luck.png"/>
+      </th>
+      <td id="luck-1">
+       71
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-Firepower.png"/>
+      </th>
+      <td id="firepower-1">
+       80
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Torpedo.png"/>
+      </th>
+      <td id="torpedo-1">
+       0
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Evasion.png"/>
+      </th>
+      <td id="evasion-1">
+       7
+      </td>
+      <th scope="row">
+       航速
+      </th>
+      <td id="speed-1">
+       25
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-AntiAir.png"/>
+      </th>
+      <td id="antiAir-1">
+       34
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Aviation.png"/>
+      </th>
+      <td id="aviation-1">
+       0
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Consumption.png"/>
+      </th>
+      <td id="consumption-1">
+       5
+      </td>
+      <th scope="row">
+       <img src="data_icon/25px-Hit.png"/>
+      </th>
+      <td id="hit-1">
+       22
+      </td>
+     </tr>
+     <tr>
+      <th scope="row">
+       <img src="data_icon/25px-ASW.png"/>
+      </th>
+      <td id="asw-1">
+       0
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship_weapon">
+    <thead class="thead-light">
+     <tr>
+      <th colspan="6" scope="col">
+       武装
+      </th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <th colspan="1" scope="row">
+       栏位
+      </th>
+      <th colspan="2" scope="row">
+       效率
+      </th>
+      <th colspan="2" scope="row">
+       装备类型
+      </th>
+      <th colspan="1" scope="row">
+       最大数量
+      </th>
+     </tr>
+     <tr>
+      <td colspan="1">
+       1
+      </td>
+      <td colspan="2" id="slots_1_efficiency">
+       105% → 135%
+      </td>
+      <td colspan="2" id="slots_1_equippable">
+       BB Guns
+      </td>
+      <td colspan="1" id="slots_1_max">
+       3
+      </td>
+     </tr>
+     <tr>
+      <td colspan="1">
+       2
+      </td>
+      <td colspan="2" id="slots_2_efficiency">
+       210% → 210%
+      </td>
+      <td colspan="2" id="slots_2_equippable">
+       CL/DD Guns
+      </td>
+      <td colspan="1" id="slots_2_max">
+       3
+      </td>
+     </tr>
+     <tr>
+      <td colspan="1">
+       3
+      </td>
+      <td colspan="2" id="slots_3_efficiency">
+       100% → 100%
+      </td>
+      <td colspan="2" id="slots_3_equippable">
+       Anti-Air Guns
+      </td>
+      <td colspan="1" id="slots_3_max">
+       1
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship_skill">
+    <thead class="thead-light">
+     <tr>
+      <th scope="col">
+       技能
+      </th>
+     </tr>
+    </thead>
+    <tbody id="skill">
+     <html>
+      <body>
+       <tr>
+        <td>
+         <img height="60px" src="images/skills/212/4th_combined_fleet_flagship.png" width="60px"/>
+         重樱舰队旗舰-鲨
+        </td>
+       </tr>
+       <tr>
+        <td>
+         When sortied as Flagship: increases all your Sakura Empire ships' FP by 4% (10%) and RLD and Accuracy by 5% (20%). Also increases the DMG of all your Sakura Empire Carriers by 5% (20%) (does not include Aviation Battleships).
+        </td>
+       </tr>
+       <tr>
+        <td>
+         <img height="60px" src="images/skills/212/big_seven_sakura.png" width="60px"/>
+         BIG SEVEN-樱
+        </td>
+       </tr>
+       <tr>
+        <td>
+         When this ship fires its Main Guns: 20% (40%) chance to fire a special barrage (DMG is based on skill's level). Barrage preview (gif)
+        </td>
+       </tr>
+      </body>
+     </html>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship_limit_break">
+    <thead class="thead-light">
+     <tr>
+      <th colspan="3" scope="col">
+       突破
+      </th>
+     </tr>
+    </thead>
+    <tbody id="break">
+     <html>
+      <body>
+       <tr>
+        <th colspan="1" scope="col" width="80px">
+         0破
+        </th>
+        <td colspan="2">
+         ●Main Gun Mount +1
+         <br/>
+         ●Main Gun Efficiency +5%
+         <br/>
+        </td>
+       </tr>
+       <tr>
+        <th colspan="1" scope="col" width="80px">
+         1破
+        </th>
+        <td colspan="2">
+         ●Secondary Gun Mount +2
+         <br/>
+         ●Main Gun Efficiency +10%
+         <br/>
+        </td>
+       </tr>
+       <tr>
+        <th colspan="1" scope="col" width="80px">
+         2破
+        </th>
+        <td colspan="2">
+         ●Main Gun Mount +1
+         <br/>
+         ●Main Gun Efficiency +15%
+         <br/>
+        </td>
+       </tr>
+      </body>
+     </html>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship_tech_point">
+    <thead class="thead-light">
+     <tr>
+      <th colspan="4" scope="col">
+       科技点
+      </th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <th scope="col" width="80px">
+       获得
+      </th>
+      <td id="collection">
+       <img src="res_icon/25px-TechPoint.png"/>
+       18
+      </td>
+      <th scope="col" width="80px">
+       满破
+      </th>
+      <td id="maxLB">
+       <img src="res_icon/25px-TechPoint.png"/>
+       36
+      </td>
+     </tr>
+     <tr>
+      <th scope="col" width="80px">
+       120级
+      </th>
+      <td id="lv120">
+       <img src="res_icon/25px-TechPoint.png"/>
+       27
+      </td>
+      <th scope="col" width="80px">
+       合计
+      </th>
+      <td id="total">
+       <img src="res_icon/25px-TechPoint.png"/>
+       81
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship_scrap">
+    <thead class="thead-light">
+     <tr>
+      <th scope="col">
+       食用价值
+      </th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td>
+       <img src="res_icon/25px-Coinicon.png"/>
+       <span id="coin">
+        11
+       </span>
+       <img src="res_icon/25px-Oilicon.png"/>
+       <span id="oil">
+        4
+       </span>
+       <img src="res_icon/18px-Medalicon.png"/>
+       <span id="medal">
+        10
+       </span>
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="table-content">
+   <table class="table table-bordered" id="ship_skin">
+    <thead class="thead-light">
+     <tr>
+      <th colspan="4" scope="col">
+       皮肤列表
+      </th>
+     </tr>
+    </thead>
+    <tbody id="skin_list">
+     <html>
+      <body>
+       <tr>
+        <th scope="col" width="80px">
+         名称
+        </th>
+        <td>
+         御狐的白装束
+        </td>
+        <th scope="col" width="80px">
+         Live2D
+        </th>
+        <td>
+         否
+        </td>
+       </tr>
+       <tr>
+        <th scope="col" width="80px">
+         名称
+        </th>
+        <td>
+         神子的休憩
+        </td>
+        <th scope="col" width="80px">
+         Live2D
+        </th>
+        <td>
+         否
+        </td>
+       </tr>
+       <tr>
+        <th scope="col" width="80px">
+         名称
+        </th>
+        <td>
+         御狐的辉振袖
+        </td>
+        <th scope="col" width="80px">
+         Live2D
+        </th>
+        <td>
+         否
+        </td>
+       </tr>
+       <tr>
+        <th scope="col" width="80px">
+         名称
+        </th>
+        <td>
+         神子的闲暇一刻
+        </td>
+        <th scope="col" width="80px">
+         Live2D
+        </th>
+        <td>
+         否
+        </td>
+       </tr>
+      </body>
+     </html>
+    </tbody>
+   </table>
+  </div>
+ </body>
+</html>
