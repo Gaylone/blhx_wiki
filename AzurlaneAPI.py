@@ -548,12 +548,18 @@ def format_data_into_html(data):
         if skin['name'] == "Default" or skin['name'] == "Original Art":
             continue
         else:
-            live2d=''
-            if skin['info']['live2dModel'] == True:
-                live2d = "是"
-            else:
-                live2d = "否"
-            skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>"+str(skin['info']['cnClient'])+"</td><th  scope='col'width='80px'>Live2D</th><td>"+live2d+"</td></tr>")
+            try:
+                live2d=''
+                if skin['info']['live2dModel'] == True:
+                    live2d = "是"
+                else:
+                    live2d = "否"
+                if skin['name'] == "Retrofit":
+                    skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>" + "改造" + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
+
+                skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>"+str(skin['info']['cnClient'])+"</td><th  scope='col'width='80px'>Live2D</th><td>"+live2d+"</td></tr>")
+            except:
+                continue
     extraSoup = BeautifulSoup(skin_text, "lxml")
     soup.find(id='skin_list').append(extraSoup)
 
@@ -603,6 +609,7 @@ def get_ship_skin_by_name(ship_name, skin_name):
 
     if len(ship_skin_list)<2:
         return 1
+    # 处理婚纱
     if skin_name == '婚纱':
         for skin in ship_skin_list:
             if skin['name']=='Wedding':
@@ -622,26 +629,47 @@ def get_ship_skin_by_name(ship_name, skin_name):
                           'w', encoding="utf-8") as fp:
                     fp.write(str(soup.prettify()))
                 return 0
+    # 处理改造
+    if skin_name == '改造':
+        for skin in ship_skin_list:
+            if skin['name']=='Retrofit':
+                image_path = str(skin['image']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                background_path = str(skin['background']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                chibi_path = str(skin['chibi']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
+                soup.find(id='img-content').string = ''
+                soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
+                soup.find(id='img-content').append(
+                    soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
 
+                with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                          'w', encoding="utf-8") as fp:
+                    fp.write(str(soup.prettify()))
+                return 0
     # 处理普通皮肤
     for i in range(1,len(ship_skin_list)):
         if str(ship_skin_list[i]['name']) == 'Original Art':
             continue
-        if str(ship_skin_list[i]['info']['cnClient']) == skin_name:
-            image_path = str(ship_skin_list[i]['image']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/","")
-            background_path = str(ship_skin_list[i]['background']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
-            chibi_path = str(ship_skin_list[i]['chibi']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
-            soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
-            soup.find(id='img-content').string = ''
-            soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
-            soup.find(id='img-content').append(
-                soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
+        try:
+            if str(ship_skin_list[i]['info']['cnClient']) == skin_name:
+                image_path = str(ship_skin_list[i]['image']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/","")
+                background_path = str(ship_skin_list[i]['background']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                chibi_path = str(ship_skin_list[i]['chibi']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
+                soup.find(id='img-content').string = ''
+                soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
+                soup.find(id='img-content').append(soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
 
-            with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
-                      'w', encoding="utf-8") as fp:
-                fp.write(str(soup.prettify()))
-            return 0
-        else:
+                with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                        'w', encoding="utf-8") as fp:
+                    fp.write(str(soup.prettify()))
+                return 0
+            else:
+                continue
+        except:
             continue
     return 4
 
