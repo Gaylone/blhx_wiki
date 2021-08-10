@@ -5,6 +5,8 @@ from PIL import Image
 from azurlane import AzurAPI
 from bs4 import BeautifulSoup
 
+from .headers import header
+
 SAVE_PATH = os.path.dirname(__file__)
 """
 方法名：get_ship_data_by_name
@@ -687,3 +689,17 @@ def get_random_gallery():
     files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'images', 'gallery')))
     rfile = random.choice(files)
     return str(rfile)
+
+
+"""
+方法名：get_pve_recommendation
+参数列表：无
+用处：爬取bwiki的PVE舰船推荐图表
+返回值：div_list(数组)，url集合
+"""
+def get_pve_recommendation():
+    url="https://wiki.biligame.com/blhx/PVE%E7%94%A8%E8%88%B0%E8%88%B9%E7%BB%BC%E5%90%88%E6%80%A7%E8%83%BD%E5%BC%BA%E5%BA%A6%E6%A6%9C"
+    response= requests.get(url, headers=header)
+    soup=BeautifulSoup(response.text,"lxml")
+    div_list=soup.find_all(class_='floatnone')
+    return div_list
