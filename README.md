@@ -32,6 +32,8 @@ hoshinobot的碧蓝航线wiki插件
 
 2.根据船名和皮肤名查询皮肤立绘
 
+blhx 圣路易斯 Luxury_Handle
+
 命令示范：blhx 长门 御狐的辉振袖
 
 命令示范：blhx 长门 原皮
