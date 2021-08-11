@@ -1,10 +1,11 @@
 import os
 import random
 
+import requests
 from PIL import Image
 from azurlane import AzurAPI
 from bs4 import BeautifulSoup
-
+from .tools import *
 from .headers import header
 
 SAVE_PATH = os.path.dirname(__file__)
@@ -572,6 +573,7 @@ def format_data_into_html(data):
         fp.write(str(soup.prettify()))
 
 
+
 """
 方法名：get_ship_skin_by_name
 参数：ship_name(string),skin_name(string),if_chibi(string)
@@ -581,7 +583,7 @@ def format_data_into_html(data):
 
 
 def get_ship_skin_by_name(ship_name, skin_name):
-    soup=BeautifulSoup(
+    soup = BeautifulSoup(
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
              encoding='UTF-8'),
         "lxml")
@@ -697,9 +699,34 @@ def get_random_gallery():
 用处：爬取bwiki的PVE舰船推荐图表
 返回值：div_list(数组)，url集合
 """
+
+
 def get_pve_recommendation():
-    url="https://wiki.biligame.com/blhx/PVE%E7%94%A8%E8%88%B0%E8%88%B9%E7%BB%BC%E5%90%88%E6%80%A7%E8%83%BD%E5%BC%BA%E5%BA%A6%E6%A6%9C"
-    response= requests.get(url, headers=header)
-    soup=BeautifulSoup(response.text,"lxml")
-    div_list=soup.find_all(class_='floatnone')
+    url = "https://wiki.biligame.com/blhx/PVE%E7%94%A8%E8%88%B0%E8%88%B9%E7%BB%BC%E5%90%88%E6%80%A7%E8%83%BD%E5%BC%BA%E5%BA%A6%E6%A6%9C"
+    response = requests.get(url, headers=header)
+    soup = BeautifulSoup(response.text,"lxml")
+    div_list = soup.find_all(class_='floatnone')
     return div_list
+
+
+"""
+方法名：get_ship_weapon_by_ship_name
+参数列表：name(string)
+用处：根据船名获取bwiki的推荐装备，生成html
+返回值：无
+"""
+
+
+def get_ship_weapon_by_ship_name(name):
+    url = "https://wiki.biligame.com/blhx/"+str(name)
+    response = requests.get(url, headers=header)
+    soup = BeautifulSoup(response.text, "lxml")
+    div_list = soup.find(class_='row zb-table')
+    target_soup = BeautifulSoup(
+        open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_weapon_temp.html')),
+             encoding='UTF-8'), "lxml")
+    target_soup.find('body').append(div_list)
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_weapon.html')),
+              'w', encoding="utf-8") as fp:
+        fp.write(str(target_soup.prettify()))
+
