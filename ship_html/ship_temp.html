@@ -12,14 +12,14 @@
     <table id='head-info' class='table table-bordered'>
         <thead class='thead-dark'>
         <tr>
-            <th colspan='5' id='ship_name' scope='col'>
+            <th colspan='6' id='ship_name' scope='col'>
                 USS Enterprise【企业】
             </th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <th scope='row' rowspan='4' id='avatar'>
+            <th scope='row' rowspan='3' colspan="2" id='avatar'>
                 <img src='https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/077/thumbnail.png'/>
             </th>
             <th scope='row'>建造时间</th>
@@ -47,8 +47,38 @@
             <th scope='row'>类型
             </th>
             <td id='type'>
-                <img src='type_icon/30px-CV_img40.png'/>
+                <img src='type_icon/30px-CV_img40.png'/><br>
                 航空母舰
+            </td>
+        </tr>
+        <tr>
+            <th scope='row'>性格
+            </th>
+            <td id='character'>强硬、废材</td>
+            <th scope='row'>身份
+            </th>
+            <td id='who'>
+                塔塔开
+            </td>
+            <th scope='row'>关键词
+            </th>
+            <td id='keyword'>
+               动力强劲
+            </td>
+        </tr>
+        <tr>
+            <th scope='row' width="80px">持有物
+            </th>
+            <td id='holdings'>20400动力不足</td>
+            <th scope='row' width="90px">发色瞳色
+            </th>
+            <td id='hair_eyes' width="100px">
+                银灰色<br>胡粉
+            </td>
+            <th scope='row'>萌点
+            </th>
+            <td id='adorable'>
+                反差
             </td>
         </tr>
         </tbody>
@@ -473,7 +503,6 @@
             <td colspan='1' scope='col'width='80px'>3破</td>
             <td colspan='2' id='break-3'>Number of All Planes +1 / All Plane Efficiency +7%</td>
          </tr>
-
          </tbody>
      </table>
 </div>
@@ -548,6 +577,42 @@
              <th  scope='col'width='80px'>Live2D</th>
              <td>
                 否
+             </td>
+         </tr>
+         </tbody>
+     </table>
+</div>
+<div class='table-content'>
+     <table id='appraise' class='table table-bordered'>
+         <thead class='thead-light'>
+          <tr>
+            <th scope='col'>
+               评价
+            </th>
+        </tr>
+         </thead>
+         <tbody>
+         <tr>
+             <td>
+                <p id="appraise_content"></p>
+             </td>
+         </tr>
+         </tbody>
+     </table>
+</div>
+<div class='table-content'>
+     <table id='memo' class='table table-bordered'>
+         <thead class='thead-light'>
+          <tr>
+            <th scope='col'>
+               备注
+            </th>
+        </tr>
+         </thead>
+         <tbody>
+         <tr>
+             <td>
+                <p id="memo_content"></p>
              </td>
          </tr>
          </tbody>

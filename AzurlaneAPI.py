@@ -6,8 +6,8 @@ import requests
 from PIL import Image
 from azurlane import AzurAPI
 from bs4 import BeautifulSoup
-from tools import *
-from headers import header
+from .tools import *
+from .headers import header
 
 SAVE_PATH = os.path.dirname(__file__)
 """
