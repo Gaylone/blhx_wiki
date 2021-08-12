@@ -4,7 +4,6 @@ from hoshino.typing import MessageSegment
 from hoshino import Service, priv
 
 import os
-import emoji
 from .tools import *
 from .AzurlaneAPI import *
 
@@ -29,27 +28,27 @@ def render_forward_msg(msg_list: list, uid=10007, name='马化腾'):
 
 @sv.on_prefix('blhx')
 async def send_ship_skin_or_info(bot, ev):
-    args = ev.message.extract_plain_text().split()
-    if len(args) == 2:
-        ship_name = str(args[0])
-        skin_name = str(args[1]).replace("_",(" "))
-        flag = get_ship_skin_by_name(ship_name, skin_name)
-        if flag == 4:
-            msg = "她没有这个皮肤！"
-            await bot.send(ev, msg, at_sender=True)
-            return
-        if flag == 0:
-            print_img_skin()
-            msg = MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_skin_mix/ship_skin.png")
-            await bot.send(ev, msg, at_sender=True)
-            return
-        if flag == 1:
-            msg = "她只有原皮！"
-            await bot.send(ev, msg, at_sender=True)
-            return
-    if len(args) == 1:
-        ship_name = str(args[0])
-        try:
+    try:
+        args = ev.message.extract_plain_text().split()
+        if len(args) == 2:
+            ship_name = str(args[0])
+            skin_name = str(args[1]).replace("_",(" "))
+            flag = get_ship_skin_by_name(ship_name, skin_name)
+            if flag == 4:
+                msg = "她没有这个皮肤！"
+                await bot.send(ev, msg, at_sender=True)
+                return
+            if flag == 0:
+                print_img_skin()
+                msg = MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_skin_mix/ship_skin.png")
+                await bot.send(ev, msg, at_sender=True)
+                return
+            if flag == 1:
+                msg = "她只有原皮！"
+                await bot.send(ev, msg, at_sender=True)
+                return
+        if len(args) == 1:
+            ship_name = str(args[0])
             format_data_into_html(get_ship_data_by_name(ship_name))
             get_ship_weapon_by_ship_name(ship_name)
             print_img_ship()
@@ -62,12 +61,13 @@ async def send_ship_skin_or_info(bot, ev):
             msg_list.append(msg)
             forward_msg = render_forward_msg(msg_list)
             await bot.send_group_forward_msg(group_id=ev.group_id, messages=forward_msg)
-        except :
-            traceback.TracebackException
-            await bot.send(ev, "查询出错", at_sender=True)
-        return
-    if len(args) == 0:
-        await bot.send(ev, '请在命令之后提供精确舰船名称和皮肤昵称哦~', at_sender=True)
+            return
+        if len(args) == 0:
+            await bot.send(ev, '请在命令之后提供精确舰船名称和皮肤昵称哦~', at_sender=True)
+            return
+    except Exception as e:
+        print(e)
+        await bot.send(ev, "查询出错", at_sender=True)
         return
 
 

@@ -87,5 +87,33 @@ def img_process_ship_weapon():
     cv2.imwrite(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_weapon.png')), cropped)
 
 
-
+def translate_ship_type(english):
+    if english == 'Aircraft Carrier':
+        return ['航空母舰','CV']
+    if english == 'Destroyer':
+        return ['驱逐舰','DD']
+    if english == 'Light Cruiser':
+        return ['轻型巡洋舰','CL']
+    if english == 'Heavy Cruiser':
+        return ['重型巡洋舰','CA']
+    if english == 'Battleship':
+        return ['战列舰','BB']
+    if english == 'Light Carrier':
+        return ['轻型航空母舰','CVL']
+    if english == 'Repair':
+        return ['维修舰','AR']
+    if english == 'Battlecruiser':
+        return ['战列巡洋舰','BC']
+    if english == 'Monitor':
+        return ['浅水重炮舰','BM']
+    if english == 'Submarine':
+        return ['潜艇','SS']
+    if english == 'Submarine Carrier':
+        return ['浅水母舰','SSV']
+    if english == 'Munition Ship':
+        return ['运输舰','AE']
+    if english == 'Large Cruise':
+        return ['超级巡洋舰','CB']
+    if english == 'Aviation Battleship':
+        return ['航空战列舰','BBV']
 

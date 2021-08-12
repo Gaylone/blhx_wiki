@@ -1,3 +1,4 @@
+import json
 import os
 import random
 
@@ -5,8 +6,8 @@ import requests
 from PIL import Image
 from azurlane import AzurAPI
 from bs4 import BeautifulSoup
-from .tools import *
-from .headers import header
+from tools import *
+from headers import header
 
 SAVE_PATH = os.path.dirname(__file__)
 """
@@ -37,6 +38,15 @@ def format_data_into_html(data):
     soup = BeautifulSoup(
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_temp.html')), encoding='UTF-8'),
         "lxml")
+    # 读入bwiki数据
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__),'azurapi_data','ships_plus.json')),'r',encoding='utf-8') as load_f:
+        load_dict = json.load(load_f)
+    data_plus = {}
+    for i in range(0, len(load_dict)):
+        if str(data["id"]) == str(load_dict[i]['编号']):
+            data_plus = load_dict[i]
+            break
+
 
     # 船名
     ship_name = str(data['names']['code']) + "【" + str(data['names']['cn']) + "】"
@@ -226,90 +236,225 @@ def format_data_into_html(data):
     class_ = str(data['class'])
     soup.find(id='class').string = class_
     type = str(data['hullType'])
+    retrofitHullType = None
+    if 'retrofitHullType' in data :
+        retrofitHullType = translate_ship_type(str(data['retrofitHullType']))
     if type == 'Aircraft Carrier':
         # type = "<img src='type_icon/30px-CV_img40.png'/> 航空母舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CV_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("航空母舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Destroyer':
         # type = "<img src='type_icon/30px-DD_img40.png'/> 驱逐舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-DD_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("驱逐舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Light Cruiser':
         # type = "<img src='type_icon/30px-CL_img40.png'/> 轻型巡洋舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CL_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("轻型巡洋舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Heavy Cruiser':
         # type = "<img src='type_icon/30px-CA_img40.png'/> 重型巡洋舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CA_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("重型巡洋舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Battleship':
         # type = "<img src='type_icon/30px-BB_img40.png'/> 战列舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-BB_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("战列舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Light Carrier':
         # type = "<img src='type_icon/30px-CVL_img40.png'/> 轻型航空母舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CVL_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("轻型航空母舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Repair':
         # type = "<img src='type_icon/30px-AR_img40.png'/> 维修舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-AR_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("维修舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Battlecruiser':
         # type = "<img src='type_icon/30px-BC_img40.png'/> 战列巡洋舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-BC_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("战列巡洋舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Monitor':
         # type = "<img src='type_icon/30px-BM_img40.png'/> 浅水重炮舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-BM_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("浅水重炮舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Submarine':
         # type = "<img src='type_icon/30px-SS_img40.png'/> 潜艇"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-SS_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("潜艇")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Submarine Carrier':
         # type = "<img src='type_icon/30px-SSV_img40.png'/> 潜水母舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-SSV_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("潜水母舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Munition Ship':
         # type = "<img src='type_icon/30px-AE_img40.png'/> 运输舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-AE_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("运输舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Large Cruiser':
         # type = "<img src='type_icon/30px-CB_img40.png'/> 超级巡洋舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-CB_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("超级巡洋舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Aviation Battleship':
         # type = "<img src='type_icon/30px-BBV_img40.png'/> 航空战列舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-BBV_img40.png"))
         soup.find(id='type').append(soup.new_tag("br"))
         soup.find(id='type').append("航空战列舰")
+        if retrofitHullType is not None:
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append("改")
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(soup.new_tag("br"))
+            soup.find(id='type').append(str(retrofitHullType[0]))
+    # 性格
+    character = str(data_plus['性格'])
+    soup.find(id='character').string = character
+    # 身份
+    who = str(data_plus['身份'])
+    soup.find(id='who').string = who
+    # 关键词
+    keyword = str(data_plus['关键词'])
+    soup.find(id='keyword').string = keyword
+    # 持有物
+    holdings = str(data_plus['持有物'])
+    soup.find(id='holdings').string = holdings
+    # 发色瞳色
+    hair = str(data_plus['发色'])
+    eyes = str(data_plus['瞳色'])
+    soup.find(id='hair_eyes').string = hair
+    soup.find(id='hair_eyes').append(soup.new_tag('br'))
+    soup.find(id="hair_eyes").append(eyes)
+    # 萌点
+    adorable = str(data_plus['萌点'])
+    soup.find(id='adorable').string = adorable
+    # 评价
+    if '评价' in data_plus:
+        appraise = str(data_plus['评价'])
+        soup.find(id='appraise_content').string = appraise
+    else:
+        soup.find(id='appraise_content').string = "暂无评价"
+
+    # 备注
+    if '备注' in data_plus:
+        memo = str(data_plus['备注'])
+        soup.find(id='memo_content').string = memo
+    else:
+        soup.find(id='memo_content').string = "暂无备注"
 
     # 声优和画师
     artist = str(data['misc']['artist']['name'])
@@ -421,7 +566,7 @@ def format_data_into_html(data):
     # 1号栏武器装备
     slots_1_efficiency = str(data['slots'][0]['minEfficiency']) + "% → " + str(data['slots'][0]['maxEfficiency']) + "%"
     soup.find(id='slots_1_efficiency').string = slots_1_efficiency
-    slots_1_equippable = str(data['slots'][0]['type'])
+    slots_1_equippable = str(data_plus['武器装备'][0]['类型']) # str(data['slots'][0]['type'])
     soup.find(id='slots_1_equippable').string = slots_1_equippable
     slots_1_max = str(data['slots'][0]['max'])
     soup.find(id='slots_1_max').string = slots_1_max
@@ -429,7 +574,7 @@ def format_data_into_html(data):
     # 2号栏武器装备
     slots_2_efficiency = str(data['slots'][1]['minEfficiency']) + "% → " + str(data['slots'][1]['maxEfficiency']) + "%"
     soup.find(id='slots_2_efficiency').string = slots_2_efficiency
-    slots_2_equippable = str(data['slots'][1]['type'])
+    slots_2_equippable = str(data_plus['武器装备'][1]['类型']) # str(data['slots'][1]['type'])
     soup.find(id='slots_2_equippable').string = slots_2_equippable
     slots_2_max = str(data['slots'][1]['max'])
     soup.find(id='slots_2_max').string = slots_2_max
@@ -437,7 +582,7 @@ def format_data_into_html(data):
     # 3号栏武器装备
     slots_3_efficiency = str(data['slots'][2]['minEfficiency']) + "% → " + str(data['slots'][2]['maxEfficiency']) + "%"
     soup.find(id='slots_3_efficiency').string = slots_3_efficiency
-    slots_3_equippable = str(data['slots'][2]['type'])
+    slots_3_equippable = str(data_plus['武器装备'][2]['类型']) # str(data['slots'][2]['type'])
     soup.find(id='slots_3_equippable').string = slots_3_equippable
     slots_3_max = str(data['slots'][2]['max'])
     soup.find(id='slots_3_max').string = slots_3_max
@@ -446,11 +591,11 @@ def format_data_into_html(data):
     skills = data['skills']
     skill_text = ''
     soup.find(id='skill').clear()
-    for skill in skills:
-        skill_text += ("<tr><td ><img src='" + str(skill['icon']).replace(
+    for i in range(0,len(skills)):
+        skill_text += ("<tr><td ><img src='" + str(skills[i]['icon']).replace(
             "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "") \
-                       + "' width='60px' height='60px'/>" + str(skill['names']['cn']) \
-                       + "</td></tr><tr><td>" + str(skill['description']) + "</td></tr>")
+                       + "' width='60px' height='60px'/>" + str(skills[i]['names']['cn']) \
+                       + "</td></tr><tr><td>" + str(data_plus['技能'][i]['效果']) + "</td></tr>")
     extraSoup = BeautifulSoup(skill_text, "lxml")
     soup.find(id='skill').append(extraSoup)
 
@@ -461,14 +606,17 @@ def format_data_into_html(data):
         breaks_tr_body = ''
         break_text = []
         break_1 = break_2 = break_3 = ''
-        for break_ in breaks[0]:
-            break_1 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[0]:
+        #     break_1 += ("●" + str(break_) + "<br>")
+        break_1 = ("●"+str(data_plus['突破'][0]['一阶']).replace('/','<br>●'))
         break_text.append(break_1)
-        for break_ in breaks[1]:
-            break_2 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[1]:
+        #     break_2 += ("●" + str(break_) + "<br>")
+        break_2 = ("●" + str(data_plus['突破'][1]['二阶']).replace('/', '<br>●'))
         break_text.append(break_2)
-        for break_ in breaks[2]:
-            break_3 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[2]:
+        #     break_3 += ("●" + str(break_) + "<br>")
+        break_3 = ("●" + str(data_plus['突破'][2]['三阶']).replace('/', '<br>●'))
         break_text.append(break_3)
         for i in range(0, 3):
             breaks_tr_body += (
@@ -482,23 +630,29 @@ def format_data_into_html(data):
         breaks_tr_body = ''
         break_text = []
         break_1 = break_2 = break_3 = break_4 = break_5 = break_6 = ''
-        for break_ in breaks[0]['buffs']:
-            break_1 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[0]['buffs']:
+        #     break_1 += ("●" + str(break_) + "<br>")
+        break_1 = ("●"+str(data_plus['突破'][2]['5级']).replace('/','<br>●'))
         break_text.append(break_1)
-        for break_ in breaks[1]['buffs']:
-            break_2 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[1]['buffs']:
+        #     break_2 += ("●" + str(break_) + "<br>")
+        break_2 = ("●" + str(data_plus['突破'][3]['10级']).replace('/', '<br>●'))
         break_text.append(break_2)
-        for break_ in breaks[2]['buffs']:
-            break_3 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[2]['buffs']:
+        #     break_3 += ("●" + str(break_) + "<br>")
+        break_3 = ("●" + str(data_plus['突破'][4]['15级']).replace('/', '<br>●'))
         break_text.append(break_3)
-        for break_ in breaks[3]['buffs']:
-            break_4 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[3]['buffs']:
+        #     break_4 += ("●" + str(break_) + "<br>")
+        break_4 = ("●" + str(data_plus['突破'][5]['20级']).replace('/', '<br>●'))
         break_text.append(break_4)
-        for break_ in breaks[4]['buffs']:
-            break_5 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[4]['buffs']:
+        #     break_5 += ("●" + str(break_) + "<br>")
+        break_5 = ("●" + str(data_plus['突破'][6]['25级']).replace('/', '<br>●'))
         break_text.append(break_5)
-        for break_ in breaks[5]['buffs']:
-            break_6 += ("●" + str(break_) + "<br>")
+        # for break_ in breaks[5]['buffs']:
+        #     break_6 += ("●" + str(break_) + "<br>")
+        break_6 = ("●" + str(data_plus['突破'][7]['30级']).replace('/', '<br>●'))
         break_text.append(break_6)
         for i in range(0, 6):
             breaks_tr_body += (
