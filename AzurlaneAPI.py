@@ -3,7 +3,6 @@ import os
 import random
 
 import requests
-from PIL import Image
 from azurlane import AzurAPI
 from bs4 import BeautifulSoup
 from .tools import *
