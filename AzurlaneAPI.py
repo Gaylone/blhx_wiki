@@ -8,7 +8,15 @@ from bs4 import BeautifulSoup
 from .tools import *
 from .headers import header
 
+MAIN_URL = "https://raw.githubusercontent.com/AzurAPI"
+SHIP_LIST = f"{MAIN_URL}/azurapi-js-setup/master/ships.json"
+CHAPTER_LIST = f"{MAIN_URL}/azurapi-js-setup/master/chapters.json"
+EQUIPMENT_LIST = f"{MAIN_URL}/azurapi-js-setup/master/equipments.json"
+VERSION_INFO = f"{MAIN_URL}/azurapi-js-setup/master/version-info.json"
+MEMORIES_INFO = f"{MAIN_URL}/azurapi-js-setup/master/memories.json"
+AVAILABLE_LANGS = ["en", "cn", "jp", "kr", "code", "official"]
 SAVE_PATH = os.path.dirname(__file__)
+
 """
 方法名：get_ship_data_by_name
 参数：name(string)
@@ -17,11 +25,25 @@ SAVE_PATH = os.path.dirname(__file__)
 """
 
 
-def get_ship_data_by_name(name):
-    api = AzurAPI()
-    api.updater.update()
-    result = api.getShipByChineseName(str(name))  # 返回一个字典
-    return result
+def get_ship_data_by_name(name, online):
+    if online:
+        try:
+            api = AzurAPI()
+            api.updater.update()
+            result = api.getShipByChineseName(str(name))  # 返回一个字典
+            return result
+        except:
+            return None
+    else:
+        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'ships.json')), 'r',
+                  encoding='utf-8') as load_f:
+            load_dict = json.load(load_f)
+        for result in load_dict:
+            if str(result['names']['cn']) == str(name):
+                return result
+            else:
+                continue
+        return None
 
 
 """
@@ -38,22 +60,24 @@ def format_data_into_html(data):
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_temp.html')), encoding='UTF-8'),
         "lxml")
     # 读入bwiki数据
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__),'azurapi_data','ships_plus.json')),'r',encoding='utf-8') as load_f:
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ships_plus.json')), 'r',
+              encoding='utf-8') as load_f:
         load_dict = json.load(load_f)
     data_plus = {}
     for i in range(0, len(load_dict)):
-        if str(data["id"]) == str(load_dict[i]['编号']):
+        if str(data['id']) == str(load_dict[i]['编号']):
             data_plus = load_dict[i]
             break
-
 
     # 船名
     ship_name = str(data['names']['code']) + "【" + str(data['names']['cn']) + "】"
     soup.find(id='ship_name').string = ship_name
 
     # 头像 avatar = "<img src='" + str(data['thumbnail']) + "'/>"
-    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src=str(data['thumbnail']).replace(
-        "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")))
+    # soup.find(id='avatar').img.replace_with(soup.new_tag("img", src=str(data['thumbnail']).replace(
+    #     "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")))
+    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + pinyin(
+        str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '.png'))
 
     # 建造时长
     building_time = str(data['construction']['constructionTime'])
@@ -78,7 +102,7 @@ def format_data_into_html(data):
         soup.find(id='rarity').string = ''
         soup.find(id='rarity').append(soup.new_tag("img", src="rate_icon/50px-Decisive.png"))
         soup.find(id='rarity')['style'] = "background-image:url('rate_icon/UR_BG.png')"
-        soup.find(id='avatar')['style'] ="background-image:url('rate_icon/UR_BG.png')"
+        soup.find(id='avatar')['style'] = "background-image:url('rate_icon/UR_BG.png')"
         soup.find(id='rarity').append(soup.new_tag("br"))
         soup.find(id='rarity').append("决战方案★★★★★★")
     if rarity == 'Elite':
@@ -236,7 +260,7 @@ def format_data_into_html(data):
     soup.find(id='class').string = class_
     type = str(data['hullType'])
     retrofitHullType = None
-    if 'retrofitHullType' in data :
+    if 'retrofitHullType' in data:
         retrofitHullType = translate_ship_type(str(data['retrofitHullType']))
     if type == 'Aircraft Carrier':
         # type = "<img src='type_icon/30px-CV_img40.png'/> 航空母舰"
@@ -248,10 +272,11 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
-    if type == 'Destroyer':
+    if type == 'Destroyer' and str(data['id']) != '472':
         # type = "<img src='type_icon/30px-DD_img40.png'/> 驱逐舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-DD_img40.png"))
@@ -261,7 +286,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Light Cruiser':
@@ -274,7 +300,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Heavy Cruiser':
@@ -287,7 +314,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Battleship':
@@ -300,7 +328,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Light Carrier':
@@ -313,7 +342,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Repair':
@@ -326,7 +356,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Battlecruiser':
@@ -339,7 +370,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Monitor':
@@ -352,7 +384,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Submarine':
@@ -365,7 +398,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Submarine Carrier':
@@ -378,10 +412,11 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
-    if type == 'Munition Ship':
+    if type == 'Munition Ship' or str(data['id']) == '472':
         # type = "<img src='type_icon/30px-AE_img40.png'/> 运输舰"
         soup.find(id='type').string = ''
         soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-AE_img40.png"))
@@ -391,7 +426,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Large Cruiser':
@@ -404,7 +440,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     if type == 'Aviation Battleship':
@@ -417,7 +454,8 @@ def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append("改")
             soup.find(id='type').append(soup.new_tag("br"))
-            soup.find(id='type').append(soup.new_tag("img", src="type_icon/30px-"+str(retrofitHullType[1])+"_img40.png"))
+            soup.find(id='type').append(
+                soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     # 性格
@@ -565,7 +603,7 @@ def format_data_into_html(data):
     # 1号栏武器装备
     slots_1_efficiency = str(data['slots'][0]['minEfficiency']) + "% → " + str(data['slots'][0]['maxEfficiency']) + "%"
     soup.find(id='slots_1_efficiency').string = slots_1_efficiency
-    slots_1_equippable = str(data_plus['武器装备'][0]['类型']) # str(data['slots'][0]['type'])
+    slots_1_equippable = str(data_plus['武器装备'][0]['类型'])  # str(data['slots'][0]['type'])
     soup.find(id='slots_1_equippable').string = slots_1_equippable
     slots_1_max = str(data['slots'][0]['max'])
     soup.find(id='slots_1_max').string = slots_1_max
@@ -573,7 +611,7 @@ def format_data_into_html(data):
     # 2号栏武器装备
     slots_2_efficiency = str(data['slots'][1]['minEfficiency']) + "% → " + str(data['slots'][1]['maxEfficiency']) + "%"
     soup.find(id='slots_2_efficiency').string = slots_2_efficiency
-    slots_2_equippable = str(data_plus['武器装备'][1]['类型']) # str(data['slots'][1]['type'])
+    slots_2_equippable = str(data_plus['武器装备'][1]['类型'])  # str(data['slots'][1]['type'])
     soup.find(id='slots_2_equippable').string = slots_2_equippable
     slots_2_max = str(data['slots'][1]['max'])
     soup.find(id='slots_2_max').string = slots_2_max
@@ -581,7 +619,7 @@ def format_data_into_html(data):
     # 3号栏武器装备
     slots_3_efficiency = str(data['slots'][2]['minEfficiency']) + "% → " + str(data['slots'][2]['maxEfficiency']) + "%"
     soup.find(id='slots_3_efficiency').string = slots_3_efficiency
-    slots_3_equippable = str(data_plus['武器装备'][2]['类型']) # str(data['slots'][2]['type'])
+    slots_3_equippable = str(data_plus['武器装备'][2]['类型'])  # str(data['slots'][2]['type'])
     soup.find(id='slots_3_equippable').string = slots_3_equippable
     slots_3_max = str(data['slots'][2]['max'])
     soup.find(id='slots_3_max').string = slots_3_max
@@ -590,7 +628,7 @@ def format_data_into_html(data):
     skills = data['skills']
     skill_text = ''
     soup.find(id='skill').clear()
-    for i in range(0,len(skills)):
+    for i in range(0, len(skills)):
         skill_text += ("<tr><td ><img src='" + str(skills[i]['icon']).replace(
             "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "") \
                        + "' width='60px' height='60px'/>" + str(skills[i]['names']['cn']) \
@@ -607,7 +645,7 @@ def format_data_into_html(data):
         break_1 = break_2 = break_3 = ''
         # for break_ in breaks[0]:
         #     break_1 += ("●" + str(break_) + "<br>")
-        break_1 = ("●"+str(data_plus['突破'][0]['一阶']).replace('/','<br>●'))
+        break_1 = ("●" + str(data_plus['突破'][0]['一阶']).replace('/', '<br>●'))
         break_text.append(break_1)
         # for break_ in breaks[1]:
         #     break_2 += ("●" + str(break_) + "<br>")
@@ -621,7 +659,7 @@ def format_data_into_html(data):
             breaks_tr_body += (
                     "<tr><th colspan='1' scope='col' width='80px'>" + str(i) + "破</th><td colspan='2'>" + str(
                 break_text[i]) + "</td></tr>")
-        breaksoup = BeautifulSoup(breaks_tr_body,'lxml')
+        breaksoup = BeautifulSoup(breaks_tr_body, 'lxml')
         soup.find(id='break').append(breaksoup)
 
     elif breaks == -1:
@@ -631,7 +669,7 @@ def format_data_into_html(data):
         break_1 = break_2 = break_3 = break_4 = break_5 = break_6 = ''
         # for break_ in breaks[0]['buffs']:
         #     break_1 += ("●" + str(break_) + "<br>")
-        break_1 = ("●"+str(data_plus['突破'][2]['5级']).replace('/','<br>●'))
+        break_1 = ("●" + str(data_plus['突破'][2]['5级']).replace('/', '<br>●'))
         break_text.append(break_1)
         # for break_ in breaks[1]['buffs']:
         #     break_2 += ("●" + str(break_) + "<br>")
@@ -697,7 +735,7 @@ def format_data_into_html(data):
         soup.find(id='coin').string = soup.find(id='oil').string = soup.find(id='medal').string = "不可食用"
 
     # 皮肤列表
-    skin_list=data['skins'] # 数组
+    skin_list = data['skins']  # 数组
     skin_text = ''
     soup.find(id='skin_list').string = ""
     for skin in skin_list:
@@ -705,15 +743,17 @@ def format_data_into_html(data):
             continue
         else:
             try:
-                live2d=''
+                live2d = ''
                 if skin['info']['live2dModel'] == True:
                     live2d = "是"
                 else:
                     live2d = "否"
                 if skin['name'] == "Retrofit":
-                    skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>" + "改造" + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
+                    skin_text += (
+                                "<tr><th  scope='col' width='80px'>名称</th><td>" + "改造" + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
 
-                skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>"+str(skin['info']['cnClient'])+"</td><th  scope='col'width='80px'>Live2D</th><td>"+live2d+"</td></tr>")
+                skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>" + str(skin['info'][
+                                                                                        'cnClient']) + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
             except:
                 continue
     extraSoup = BeautifulSoup(skin_text, "lxml")
@@ -726,7 +766,6 @@ def format_data_into_html(data):
         fp.write(str(soup.prettify()))
 
 
-
 """
 方法名：get_ship_skin_by_name
 参数：ship_name(string),skin_name(string),if_chibi(string)
@@ -736,11 +775,15 @@ def format_data_into_html(data):
 
 
 def get_ship_skin_by_name(ship_name, skin_name):
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config.json')), 'r',
+              encoding='utf-8') as load_f:
+        data = json.load(load_f)
+    online_module = data['onlineModule']
     soup = BeautifulSoup(
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
              encoding='UTF-8'),
         "lxml")
-    result = get_ship_data_by_name(str(ship_name))
+    result = get_ship_data_by_name(str(ship_name), online_module)
     ship_skin_list = result['skins']
     image_path = ''
     background_path = ''
@@ -754,22 +797,23 @@ def get_ship_skin_by_name(ship_name, skin_name):
         chibi_path = str(ship_skin_list[0]['chibi']).replace(
             "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
 
-        soup.find(id='img-content')['style']="background-image: url('"+background_path+"')"
-        soup.find(id='img-content').string=''
-        soup.find(id='img-content').append(soup.new_tag('img',src=image_path,style="height: 720px"))
-        soup.find(id='img-content').append(soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
+        soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
+        soup.find(id='img-content').string = ''
+        soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
+        soup.find(id='img-content').append(
+            soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
         os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html'))
         with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
                   'w', encoding="utf-8") as fp:
             fp.write(str(soup.prettify()))
         return 0
 
-    if len(ship_skin_list)<2:
+    if len(ship_skin_list) < 2:
         return 1
     # 处理婚纱
     if skin_name == '婚纱':
         for skin in ship_skin_list:
-            if skin['name']=='Wedding':
+            if skin['name'] == 'Wedding':
                 image_path = str(skin['image']).replace(
                     "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
                 background_path = str(skin['background']).replace(
@@ -789,7 +833,7 @@ def get_ship_skin_by_name(ship_name, skin_name):
     # 处理改造
     if skin_name == '改造':
         for skin in ship_skin_list:
-            if skin['name']=='Retrofit':
+            if skin['name'] == 'Retrofit':
                 image_path = str(skin['image']).replace(
                     "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
                 background_path = str(skin['background']).replace(
@@ -807,21 +851,25 @@ def get_ship_skin_by_name(ship_name, skin_name):
                     fp.write(str(soup.prettify()))
                 return 0
     # 处理普通皮肤
-    for i in range(1,len(ship_skin_list)):
+    for i in range(1, len(ship_skin_list)):
         if str(ship_skin_list[i]['name']) == 'Original Art':
             continue
         try:
             if str(ship_skin_list[i]['info']['cnClient']) == skin_name:
-                image_path = str(ship_skin_list[i]['image']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/","")
-                background_path = str(ship_skin_list[i]['background']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
-                chibi_path = str(ship_skin_list[i]['chibi']).replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                image_path = str(ship_skin_list[i]['image']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                background_path = str(ship_skin_list[i]['background']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+                chibi_path = str(ship_skin_list[i]['chibi']).replace(
+                    "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
                 soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
                 soup.find(id='img-content').string = ''
                 soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
-                soup.find(id='img-content').append(soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
+                soup.find(id='img-content').append(
+                    soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
 
                 with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
-                        'w', encoding="utf-8") as fp:
+                          'w', encoding="utf-8") as fp:
                     fp.write(str(soup.prettify()))
                 return 0
             else:
@@ -829,7 +877,6 @@ def get_ship_skin_by_name(ship_name, skin_name):
         except:
             continue
     return 4
-
 
 
 """
@@ -857,7 +904,7 @@ def get_random_gallery():
 def get_pve_recommendation():
     url = "https://wiki.biligame.com/blhx/PVE%E7%94%A8%E8%88%B0%E8%88%B9%E7%BB%BC%E5%90%88%E6%80%A7%E8%83%BD%E5%BC%BA%E5%BA%A6%E6%A6%9C"
     response = requests.get(url, headers=header)
-    soup = BeautifulSoup(response.text,"lxml")
+    soup = BeautifulSoup(response.text, "lxml")
     div_list = soup.find_all(class_='floatnone')
     return div_list
 
@@ -871,7 +918,7 @@ def get_pve_recommendation():
 
 
 def get_ship_weapon_by_ship_name(name):
-    url = "https://wiki.biligame.com/blhx/"+str(name)
+    url = "https://wiki.biligame.com/blhx/" + str(name)
     response = requests.get(url, headers=header)
     soup = BeautifulSoup(response.text, "lxml")
     div_list = soup.find(class_='row zb-table')
@@ -882,4 +929,25 @@ def get_ship_weapon_by_ship_name(name):
     with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_weapon.html')),
               'w', encoding="utf-8") as fp:
         fp.write(str(target_soup.prettify()))
+
+
+def force_update_offline():
+    if not os.path.exists(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data'))):
+        os.mkdir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data')))
+    ship_list = requests.get(SHIP_LIST).json()
+    chapter_list = requests.get(CHAPTER_LIST).json()
+    equipment_list = requests.get(EQUIPMENT_LIST).json()
+    version_info = requests.get(VERSION_INFO).json()
+    memories_info = requests.get(MEMORIES_INFO).json()
+
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','ships.json')),'wb') as f:
+        f.write(json.dumps(ship_list,ensure_ascii=False).encode())
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','chapters.json')),'wb') as f:
+        f.write(json.dumps(chapter_list,ensure_ascii=False).encode())
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','equipments.json')),'wb') as f:
+        f.write(json.dumps(equipment_list,ensure_ascii=False).encode())
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','version-info.json')),'wb') as f:
+        f.write(json.dumps(version_info,ensure_ascii=False).encode())
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','memories.json')),'wb') as f:
+        f.write(json.dumps(memories_info,ensure_ascii=False).encode())
 

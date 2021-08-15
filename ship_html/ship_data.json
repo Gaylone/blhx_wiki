@@ -1,20 +1,22 @@
 {
-  'wikiUrl': 'https://azurlane.koumakan.jp/Kashino',
-  'id': '472',
-  '_gid': 31901,
+  'wikiUrl': 'https://azurlane.koumakan.jp/Fusou',
+  'id': '208',
+  '_gid': 30501,
   '_sid': [
-    319011,
-    319012,
-    319013,
-    319014
+    305011,
+    305012,
+    305013,
+    305014,
+    310014
   ],
-  '_code': 472,
+  '_code': 208,
   'names': {
-    'en': 'Kashino',
-    'code': 'IJN Kashino',
-    'cn': '樫野',
-    'jp': '樫野',
-    'kr': '카시노'
+    'en': 'Fusou',
+    'code': 'IJN Fuso',
+    'cn': '扶桑',
+    'jp': '扶桑',
+    'kr': '후소',
+    'tw': '扶桑'
   },
   'exists': {
     'en': True,
@@ -23,142 +25,166 @@
     'kr': True
   },
   'hexagon': [
-    1,
+    4,
     0,
     0,
     1,
     1,
     3
   ],
-  'class': 'Kashino',
+  'class': 'Fusou',
   'nationality': 'Sakura Empire',
-  'hullType': 'Destroyer',
-  'thumbnail': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/thumbnail.png',
-  'rarity': 'Elite',
+  'hullType': 'Battleship',
+  'thumbnail': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/thumbnail.png',
+  'rarity': 'Rare',
   'stars': {
-    'stars': '★★★★★',
-    'value': 5
+    'stars': '★★★★',
+    'value': 4
   },
   'stats': {
     'baseStats': {
-      'health': '823',
-      'armor': 'Light',
-      'reload': '75',
-      'luck': '58',
-      'firepower': '14',
+      'health': '1143',
+      'armor': 'Heavy',
+      'reload': '51',
+      'luck': '13',
+      'firepower': '74',
       'torpedo': '0',
-      'evasion': '10',
-      'speed': '14',
-      'antiair': '25',
+      'evasion': '5',
+      'speed': '23',
+      'antiair': '41',
       'aviation': '0',
-      'oilConsumption': '3',
-      'accuracy': '73',
+      'oilConsumption': '4',
+      'accuracy': '20',
       'antisubmarineWarfare': '0'
     },
     'level100': {
-      'health': '4256',
-      'armor': 'Light',
-      'reload': '177',
-      'luck': '58',
-      'firepower': '63',
+      'health': '5911',
+      'armor': 'Heavy',
+      'reload': '120',
+      'luck': '13',
+      'firepower': '349',
       'torpedo': '0',
-      'evasion': '25',
-      'speed': '14',
-      'antiair': '116',
+      'evasion': '13',
+      'speed': '23',
+      'antiair': '193',
       'aviation': '0',
-      'oilConsumption': '10',
-      'accuracy': '191',
+      'oilConsumption': '13',
+      'accuracy': '52',
       'antisubmarineWarfare': '0'
     },
     'level120': {
-      'health': '4980',
-      'armor': 'Light',
-      'reload': '204',
-      'luck': '58',
-      'firepower': '73',
+      'health': '6916',
+      'armor': 'Heavy',
+      'reload': '138',
+      'luck': '13',
+      'firepower': '390',
       'torpedo': '0',
-      'evasion': '51',
-      'speed': '14',
-      'antiair': '134',
+      'evasion': '31',
+      'speed': '23',
+      'antiair': '222',
       'aviation': '0',
-      'oilConsumption': '10',
-      'accuracy': '212',
+      'oilConsumption': '13',
+      'accuracy': '66',
+      'antisubmarineWarfare': '0'
+    },
+    'level100Retrofit': {
+      'health': '6261',
+      'armor': 'Heavy',
+      'reload': '118',
+      'luck': '13',
+      'firepower': '352',
+      'torpedo': '0',
+      'evasion': '13',
+      'speed': '23',
+      'antiair': '268',
+      'aviation': '151',
+      'oilConsumption': '13',
+      'accuracy': '63',
+      'antisubmarineWarfare': '0'
+    },
+    'level120Retrofit': {
+      'health': '7266',
+      'armor': 'Heavy',
+      'reload': '134',
+      'luck': '13',
+      'firepower': '390',
+      'torpedo': '0',
+      'evasion': '31',
+      'speed': '23',
+      'antiair': '303',
+      'aviation': '202',
+      'oilConsumption': '13',
+      'accuracy': '77',
       'antisubmarineWarfare': '0'
     }
   },
   'slots': [
     {
-      'maxEfficiency': 110,
-      'minEfficiency': 90,
-      'type': 'DD Guns',
-      'max': 1
+      'maxEfficiency': 130,
+      'minEfficiency': 100,
+      'type': 'BB Guns',
+      'max': 3,
+      'kaiEfficiency': 165
+    },
+    {
+      'maxEfficiency': 200,
+      'minEfficiency': 200,
+      'type': 'CL/DD Guns (Seaplanes on retrofit)',
+      'max': 3,
+      'kaiEfficiency': 200
     },
     {
       'maxEfficiency': 80,
-      'minEfficiency': 70,
+      'minEfficiency': 80,
       'type': 'Anti-Air Guns',
-      'max': 1
-    },
-    {
-      'maxEfficiency': 100,
-      'minEfficiency': 100,
-      'type': 'Auxiliaries / Cargo',
-      'max': 1
+      'max': 1,
+      'kaiEfficiency': 85
     }
   ],
   'enhanceValue': {
-    'firepower': 4,
+    'firepower': 61,
     'torpedo': 0,
     'aviation': 0,
-    'reload': 14
+    'reload': 10
   },
   'scrapValue': {
-    'coin': 4,
-    'oil': 3,
-    'medal': 4
+    'coin': 11,
+    'oil': 4,
+    'medal': 1
   },
   'skills': [
     {
-      'icon': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skills/472/robust_ballasts.png',
+      'icon': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skills/208/cover_fire.png',
       'names': {
-        'en': 'Robust Ballasts',
-        'cn': '损伤警备',
-        'jp': None
+        'en': 'Cover Fire',
+        'cn': '火力覆盖',
+        'jp': '砲火制圧'
       },
-      'description': "For her first 3 battles of each sortie, reduce Gun damage taken by self by 1% (10%). At start of battle, if fleet contains 2 or more Sakura Empire ships, increase own Speed by 10 [This skill's sortie battle counter resets when moving to a new area or changing your formation within Operation Siren.]",
-      'color': 'deepskyblue'
+      'description': "Increases this ship's FP by 10% (20%).",
+      'color': 'pink'
     },
     {
-      'icon': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skills/472/cargo_fire_precautions.png',
+      'icon': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skills/208/aviation_preparationskai.png',
       'names': {
-        'en': 'Cargo Fire Precautions',
-        'cn': '小心火焰！',
-        'jp': None
+        'en': '(Retrofit) Aviation Preparations',
+        'cn': '航空预备',
+        'jp': '予備攻撃隊'
       },
-      'description': 'When equipped with Transport Gear, reduce self burn damage taken by 5% (15%), and burn time by 3s (6s).',
-      'color': 'deepskyblue'
-    },
-    {
-      'icon': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skills/472/all_out_assault.png',
-      'names': {
-        'en': 'All Out Assault',
-        'cn': '全弹发射II',
-        'jp': None
-      },
-      'description': 'Every 15 (10) shots from the main battery, triggers Full Barrage - Kashino I (II).',
+      'description': "Once per battle, when this ship launches its first Airstrike: launches an additional special airstrike (DMG is based on skill's level).",
       'color': 'pink'
     }
   ],
   'limitBreaks': [
     [
-      'Gains Full Barrage I',
+      'Main Gun Mount +1',
       'Main Gun Efficiency +5%'
     ],
     [
-      'Anti-Air Efficiency +10%'
+      'Secondary Gun Mount +2',
+      'Main Gun Efficiency +10%'
     ],
     [
-      'Upgrades Full Barrage I→II',
+      'Main Gun Mount +1',
       'Main Gun Efficiency +15%'
     ]
   ],
@@ -166,97 +192,335 @@
     'statsBonus': {
       'collection': {
         'applicable': [
-          'Munition ship'
+          'Battleship',
+          'Battlecruiser',
+          'Aviation battleship'
         ],
-        'bonus': '+1',
+        'bonus': '+2',
         'stat': 'health'
       },
       'maxLevel': {
         'applicable': [
-          'Munition ship'
+          'Battleship',
+          'Battlecruiser',
+          'Aviation battleship'
         ],
         'bonus': '+1',
-        'stat': 'health'
+        'stat': 'reload'
       }
     },
     'techPoints': {
-      'collection': 6,
-      'maxLimitBreak': 12,
-      'maxLevel': 9,
-      'total': 27
+      'collection': 11,
+      'maxLimitBreak': 22,
+      'maxLevel': 16,
+      'total': 49
     }
   },
+  'retrofit': True,
+  'retrofitId': '3208',
+  'retrofitProjects': {
+    'A': {
+      'id': 'Hull Improvement Ⅰ',
+      'attributes': [
+        '"Health" +100'
+      ],
+      'materials': [
+        '2x "BattleshipT1BP"'
+      ],
+      'coins': 200,
+      'level': 1,
+      'levelBreakLevel': 0,
+      'levelBreakStars': '★★☆☆☆',
+      'recurrence': 1,
+      'require': []
+    },
+    'B': {
+      'id': 'Reload Enhancement Ⅰ',
+      'attributes': [
+        '"Reload" +5'
+      ],
+      'materials': [
+        '2x "BattleshipT1BP"'
+      ],
+      'coins': 300,
+      'level': 5,
+      'levelBreakLevel': 0,
+      'levelBreakStars': '★★☆☆☆',
+      'recurrence': 1,
+      'require': [
+        'A'
+      ]
+    },
+    'C': {
+      'id': 'Main Gun Improvement Ⅰ',
+      'attributes': [
+        'Equip 1 Efficiency +5.0%'
+      ],
+      'materials': [
+        '3x "BattleshipT1BP"'
+      ],
+      'coins': 400,
+      'level': 20,
+      'levelBreakLevel': 1,
+      'levelBreakStars': '★★★☆☆',
+      'recurrence': 1,
+      'require': [
+        'A',
+        'B'
+      ]
+    },
+    'D': {
+      'id': 'Firepower Enhancement Ⅰ',
+      'attributes': [
+        '"Firepower" +10'
+      ],
+      'materials': [
+        '3x "BattleshipT1BP"'
+      ],
+      'coins': 500,
+      'level': 25,
+      'levelBreakLevel': 1,
+      'levelBreakStars': '★★★☆☆',
+      'recurrence': 1,
+      'require': [
+        'C'
+      ]
+    },
+    'E': {
+      'id': 'Anti-Air Gun Improvement Ⅰ',
+      'attributes': [
+        'Equip 3 Efficiency +5.0%'
+      ],
+      'materials': [
+        '3x "BattleshipT1BP"'
+      ],
+      'coins': 600,
+      'level': 35,
+      'levelBreakLevel': 2,
+      'levelBreakStars': '★★★★☆',
+      'recurrence': 1,
+      'require': [
+        'C'
+      ]
+    },
+    'F': {
+      'id': 'Anti-Air Enhancement Ⅰ',
+      'attributes': [
+        '"Anti-air" +15'
+      ],
+      'materials': [
+        '4x "BattleshipT1BP"'
+      ],
+      'coins': 800,
+      'level': 40,
+      'levelBreakLevel': 2,
+      'levelBreakStars': '★★★★☆',
+      'recurrence': 1,
+      'require': [
+        'E'
+      ]
+    },
+    'G': {
+      'id': 'Hull Improvement Ⅱ',
+      'attributes': [
+        '"Health" +100 / "Health" +150'
+      ],
+      'materials': [
+        '1 / 2x "BattleshipT2BP"'
+      ],
+      'coins': 1000,
+      'level': 50,
+      'levelBreakLevel': 2,
+      'levelBreakStars': '★★★★☆',
+      'recurrence': 2,
+      'require': [
+        'E'
+      ]
+    },
+    'H': {
+      'id': 'Main Gun Improvement Ⅱ',
+      'attributes': [
+        'Equip 1 Efficiency +5.0% / Equip 1 Efficiency +5.0%'
+      ],
+      'materials': [
+        '2 / 2x "BattleshipT2BP"'
+      ],
+      'coins': 1200,
+      'level': 55,
+      'levelBreakLevel': 2,
+      'levelBreakStars': '★★★★☆',
+      'recurrence': 2,
+      'require': [
+        'G'
+      ]
+    },
+    'I': {
+      'id': 'Firepower Enhancement Ⅱ',
+      'attributes': [
+        '"Firepower" +5 / "Firepower" +15'
+      ],
+      'materials': [
+        '2 / 2x "BattleshipT2BP"'
+      ],
+      'coins': 1400,
+      'level': 70,
+      'levelBreakLevel': 3,
+      'levelBreakStars': '★★★★★',
+      'recurrence': 2,
+      'require': [
+        'D',
+        'H'
+      ]
+    },
+    'J': {
+      'id': 'Modernization',
+      'attributes': [
+        'Change Ship Type into "Aviation battleship (BBV)" Aviation Battleships',
+        '"Firepower" -26',
+        '"Reload" -8',
+        '"Anti-air" +60',
+        '"Aviation"+131',
+        'Main Gun Efficiency +20%',
+        'Main Gun Mount "Firepower" -1 Equipment Slot 2 changes into Airplane Slot (can be equipped with Seaplanes',
+        'Air Attack becomes available)',
+        'Unlock Skill "Air Reserve"'
+      ],
+      'materials': [
+        '3x "BattleshipT3BP"',
+        '60x "PlaneT3Plate"'
+      ],
+      'coins': 5000,
+      'level': 75,
+      'levelBreakLevel': 3,
+      'levelBreakStars': '★★★★★',
+      'recurrence': 1,
+      'require': [
+        'H'
+      ]
+    },
+    'K': {
+      'id': 'Aviation Enhancement Ⅰ',
+      'attributes': [
+        '"Aviation" +20'
+      ],
+      'materials': [
+        '2x "CarrierT3BP"'
+      ],
+      'coins': 1600,
+      'level': 85,
+      'levelBreakLevel': 3,
+      'levelBreakStars': '★★★★★',
+      'recurrence': 1,
+      'require': [
+        'F',
+        'J'
+      ]
+    }
+  },
+  'retrofitHullType': 'Aviation Battleship',
   'construction': {
-    'constructionTime': '01:30:00',
+    'constructionTime': 'Drop Only',
     'availableIn': {
       'light': False,
       'heavy': False,
       'aviation': False,
-      'limited': "Only during event: Dreamwaker's Butterfly",
+      'limited': False,
       'exchange': False
     }
   },
   'obtainedFrom': {
-    'obtainedFrom': 'Available during "Dreamwaker\'s Butterfly" event.',
-    'fromMaps': []
+    'obtainedFrom': 'Not available in CN server.',
+    'fromMaps': [
+      {
+        'name': '6-2',
+        'note': 'Not available in CN'
+      },
+      {
+        'name': '6-3',
+        'note': 'Not available in CN'
+      },
+      {
+        'name': '6-4',
+        'note': 'Not available in CN'
+      }
+    ]
   },
   'misc': {
     'artist': {
-      'name': '全班最菜嘤嘤嘤',
-      'url': 'https://azurlane.koumakan.jp/Artists#.E5.85.A8.E7.8F.AD.E6.9C.80.E8.8F.9C.E5.98.A4.E5.98.A4.E5.98.A4'
+      'name': 'Rain Lan',
+      'url': 'https://azurlane.koumakan.jp/Artists#Rain_Lan'
     },
-    'pixiv': None,
+    'pixiv': {
+      'name': 'Rain Lan',
+      'url': 'https://www.pixiv.net/member.php?id=2922722'
+    },
     'twitter': {
-      'name': 'zelda10010',
-      'url': 'https://twitter.com/zelda10010'
+      'name': 'Rain Lan',
+      'url': 'https://twitter.com/h49889577'
     },
     'web': {
-      'name': '全班最菜嘤嘤嘤',
-      'url': 'https://weibo.com/u/7477949468'
+      'name': 'Rain_Lan_其实叫乳量',
+      'url': 'https://weibo.com/u/2120756483'
     },
     'voice': {
-      'name': 'Reina Kondou',
-      'url': 'https://en.wikipedia.org/wiki/Reina_Kond%C5%8D'
+      'name': 'Ami Koshimizu',
+      'url': 'https://en.wikipedia.org/wiki/Ami_Koshimizu'
     }
   },
   'skins': [
     {
       'name': 'Default',
-      'image': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/Default/image.png',
+      'image': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/Default/image.png',
       'background': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/backgrounds/MainDayBG.png',
-      'chibi': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/Default/chibi.png',
+      'chibi': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/Default/chibi.png',
       'info': {
         'live2dModel': False,
         'obtainedFrom': 'Default'
       }
     },
     {
-      'name': 'Hot Springs Relaxation',
-      'image': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/Hot_Springs_Relaxation/image.png',
-      'background': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/backgrounds/Skin_BG_106.png',
-      'chibi': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/472/Hot_Springs_Relaxation/chibi.png',
+      'name': 'Retrofit',
+      'image': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/Retrofit/image.png',
+      'background': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/backgrounds/MainDayBG.png',
+      'chibi': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/Retrofit/chibi.png',
       'info': {
-        'live2dModel': True,
+        'live2dModel': False,
+        'obtainedFrom': 'Retrofit'
+      }
+    },
+    {
+      'name': 'The Celebration of Spring',
+      'image': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/The_Celebration_of_Spring/image.png',
+      'background': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/backgrounds/Skin_BG_102.png',
+      'chibi': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/The_Celebration_of_Spring/chibi.png',
+      'info': {
+        'live2dModel': False,
         'obtainedFrom': 'Skin Shop',
-        'enClient': 'Hot Springs Relaxation',
-        'cnClient': '温泉放松时间',
-        'jpClient': '湯上がりプレシュアタイム',
-        'cost': 1080
+        'enClient': 'The Celebration of Spring',
+        'cnClient': '春之祝',
+        'jpClient': '春の祝い',
+        'cost': 680
+      }
+    },
+    {
+      'name': 'Perfect Partner?',
+      'image': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/Perfect_Partner/image.png',
+      'background': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/backgrounds/Skin_BG_109.png',
+      'chibi': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/skins/208/Perfect_Partner/chibi.png',
+      'info': {
+        'live2dModel': False,
+        'obtainedFrom': 'Skin Shop',
+        'enClient': 'Perfect Partner?',
+        'cnClient': '家有贤妻？',
+        'jpClient': 'モフモフ内助？',
+        'cost': 780
       }
     }
   ],
   'gallery': [
     {
-      'description': 'Kii, Suzutsuki, Kumano, Kashino',
-      'url': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/gallery/Bg_2021.06.03_8.png'
-    },
-    {
-      'description': 'Amagi, Shinano, Kashino, Suzutsuki',
-      'url': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/gallery/Bg_2021.05.27_13.png'
-    },
-    {
-      'description': 'Chitose, Kashino (facing backwards), Kumano (Facing backwards), Kii, Shinano, Suzutsuki',
-      'url': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/gallery/Bg_2020.09.17_1.png'
+      'description': 'Fusou and her sister Yamashiro in a house filled with youkai',
+      'url': 'https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/images/gallery/Bg_fusou_1.png'
     }
   ]
 }

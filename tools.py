@@ -2,8 +2,13 @@
 import os
 import imgkit
 import cv2
-SAVE_PATH=os.path.dirname(__file__)
-tool_path=os.path.abspath(os.path.join(os.path.dirname(__file__), 'wkhtmltopdf', 'bin','wkhtmltoimage.exe'))
+import pypinyin
+import json
+
+from azurlane.azurapi import AzurAPI
+
+SAVE_PATH = os.path.dirname(__file__)
+tool_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'wkhtmltopdf', 'bin', 'wkhtmltoimage.exe'))
 """
 方法名：print_img
 参数列表：无
@@ -11,19 +16,21 @@ tool_path=os.path.abspath(os.path.join(os.path.dirname(__file__), 'wkhtmltopdf',
 返回值：无返回值，从html文件夹里读取html文件，打印的图片输出到images文件夹
 """
 
+
 def print_img_ship():
     # path_wkimg = SAVE_PATH + '/\\wkhtmltopdf/\\bin/\\wkhtmltoimage.exe'  # 工具路径
     path_wkimg = tool_path
     cfg = imgkit.config(wkhtmltoimage=path_wkimg)
     options = {
-    "encoding": "UTF-8",
-    "enable-local-file-access": None
+        "encoding": "UTF-8",
+        "enable-local-file-access": None
     }
     print("开始")
     imgkit.from_file(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_info.html')),
                      os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png')),
-                                     options=options, config=cfg) # 不管怎么样都打印这张图片
+                     options=options, config=cfg)  # 不管怎么样都打印这张图片
     print("结束")
+
 
 """
 方法名：print_img_skin
@@ -31,16 +38,19 @@ def print_img_ship():
 用处：调用打印工具，打印ship_skin.html成图片
 返回值：无返回值，从html文件夹里读取html文件，打印的图片输出到images文件夹
 """
+
+
 def print_img_skin():
     path_wkimg = tool_path  # 工具路径
     cfg = imgkit.config(wkhtmltoimage=path_wkimg)
     options = {
-    "encoding": "UTF-8",
-    "enable-local-file-access": None
+        "encoding": "UTF-8",
+        "enable-local-file-access": None
     }
     imgkit.from_file(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
-                     os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_skin_mix', 'ship_skin.png')),
-                                     options=options, config=cfg) # 不管怎么样都打印这张图片
+                     os.path.abspath(
+                         os.path.join(os.path.dirname(__file__), 'images', 'ship_skin_mix', 'ship_skin.png')),
+                     options=options, config=cfg)  # 不管怎么样都打印这张图片
 
 
 def print_img_ship_weapon():
@@ -66,9 +76,9 @@ def print_img_ship_weapon():
 
 def img_process_ship_info():
     # os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png'))
-    img=cv2.imread(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png')))
-    image=img.shape
-    cropped = img[0:image[0],0:620]  # 裁剪坐标为[y0:y1, x0:x1]
+    img = cv2.imread(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png')))
+    image = img.shape
+    cropped = img[0:image[0], 0:620]  # 裁剪坐标为[y0:y1, x0:x1]
     cv2.imwrite(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_info.png')), cropped)
 
     """
@@ -89,31 +99,62 @@ def img_process_ship_weapon():
 
 def translate_ship_type(english):
     if english == 'Aircraft Carrier':
-        return ['航空母舰','CV']
+        return ['航空母舰', 'CV']
     if english == 'Destroyer':
-        return ['驱逐舰','DD']
+        return ['驱逐舰', 'DD']
     if english == 'Light Cruiser':
-        return ['轻型巡洋舰','CL']
+        return ['轻型巡洋舰', 'CL']
     if english == 'Heavy Cruiser':
-        return ['重型巡洋舰','CA']
+        return ['重型巡洋舰', 'CA']
     if english == 'Battleship':
-        return ['战列舰','BB']
+        return ['战列舰', 'BB']
     if english == 'Light Carrier':
-        return ['轻型航空母舰','CVL']
+        return ['轻型航空母舰', 'CVL']
     if english == 'Repair':
-        return ['维修舰','AR']
+        return ['维修舰', 'AR']
     if english == 'Battlecruiser':
-        return ['战列巡洋舰','BC']
+        return ['战列巡洋舰', 'BC']
     if english == 'Monitor':
-        return ['浅水重炮舰','BM']
+        return ['浅水重炮舰', 'BM']
     if english == 'Submarine':
-        return ['潜艇','SS']
+        return ['潜艇', 'SS']
     if english == 'Submarine Carrier':
-        return ['浅水母舰','SSV']
+        return ['浅水母舰', 'SSV']
     if english == 'Munition Ship':
-        return ['运输舰','AE']
+        return ['运输舰', 'AE']
     if english == 'Large Cruise':
-        return ['超级巡洋舰','CB']
+        return ['超级巡洋舰', 'CB']
     if english == 'Aviation Battleship':
-        return ['航空战列舰','BBV']
+        return ['航空战列舰', 'BBV']
 
+
+def pinyin(word):
+    s = ''
+    for i in pypinyin.pinyin(word, style=pypinyin.NORMAL):
+        s += "".join(i)
+    return s
+
+
+def get_local_version():
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'version-info.json')), 'r',
+              encoding='utf-8') as load_f:
+        load_dict = json.load(load_f)
+    return load_dict['ships']
+
+
+def get_online_version():
+    api = AzurAPI()
+    api.updater.update()
+    return str(api.getVersion())
+
+
+def online_module_on():
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config.json')), 'w',
+              encoding='utf-8') as load_f:
+        load_f.write(json.dumps({'onlineModule': True}))
+
+
+def online_module_off():
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config.json')), 'w',
+              encoding='utf-8') as load_f:
+        load_f.write(json.dumps({'onlineModule': False}))
