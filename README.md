@@ -6,7 +6,7 @@ hoshinobot的碧蓝航线wiki插件
 
 终于有人来帮我一手了哈哈哈哈哈哈哈哈哈
 
-## 原理
+## 原理(Winodows系统优先）
 
 1.调用https://azurapi.github.io/ 的碧蓝航线API返回JSON数据，再调用爬虫获取的[bwiki上的附加JSON数据](https://github.com/jiyemengmei/blhxwiki)
 
