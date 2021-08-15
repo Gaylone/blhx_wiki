@@ -750,7 +750,7 @@ def format_data_into_html(data):
                     live2d = "否"
                 if skin['name'] == "Retrofit":
                     skin_text += (
-                                "<tr><th  scope='col' width='80px'>名称</th><td>" + "改造" + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
+                            "<tr><th  scope='col' width='80px'>名称</th><td>" + "改造" + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
 
                 skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>" + str(skin['info'][
                                                                                         'cnClient']) + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
@@ -764,6 +764,203 @@ def format_data_into_html(data):
     with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_info.html')),
               'w', encoding="utf-8") as fp:
         fp.write(str(soup.prettify()))
+
+    if 'retrofitHullType' in data:
+        # 读入html备用
+        retrofit_soup = BeautifulSoup(
+            open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_retrofit_temp.html')),
+                 encoding='UTF-8'),
+            "lxml")
+        retrofit_soup.find(id='ship_name').string = ship_name
+        retrofit_soup.find(id='id').string = id
+        if faction == 'Sakura Empire':
+            # faction = "<img src='faction_icon/50px-Jp_1.png'/>重樱"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Jp_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("重樱")
+        if faction == 'Universal':
+            # faction = "<img src='faction_icon/50px-Cm_1.png'/>突破材料"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Cm_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("突破材料")
+        if faction == 'Eagle Union':
+            # faction = "<img src='faction_icon/50px-Us_1.png'/>白鹰"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Us_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("白鹰")
+        if faction == 'Royal Navy':
+            # faction = "<img src='faction_icon/50px-En_1.png'/>皇家"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-En_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("皇家")
+        if faction == 'Venus Vacation':
+            # faction = "<img src='faction_icon/50px-Um_1.png'/>沙滩排球"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("沙滩排球")
+        if faction == 'Iron Blood':
+            # faction = "<img src='faction_icon/50px-De_1.png'/>铁血"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-De_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("铁血")
+        if faction == 'Dragon Empery':
+            # faction = "<img src='faction_icon/50px-Cn_1.png'/>东煌"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Cn_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("东煌")
+        if faction == 'Vichya Dominion':
+            # faction = "<img src='faction_icon/50px-Vf_1.png'/>维希教廷"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Vf_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("维希教廷")
+        if faction == 'Sardegna Empire':
+            # faction = "<img src='faction_icon/50px-Rn_1.png'/>撒丁帝国"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Rn_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("撒丁帝国")
+        if faction == 'Bilibili':
+            # faction = "<img src='faction_icon/50px-Bi_1.png'/>哔哩哔哩"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Bi_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("哔哩哔哩")
+        if faction == 'Utawarerumono':
+            # faction = "<img src='faction_icon/50px-Um_1.png'/>传颂之物"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("传颂之物")
+        if faction == 'Northern Parliament':
+            # faction = "<img src='faction_icon/50px-Northunion_orig.png'/>北方联合"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Northunion_orig.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("北方联合")
+        if faction == 'META':
+            # faction = "<img src='faction_icon/50px-Meta_1.png'/>META"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Meta_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("META")
+        if faction == 'Neptunia':
+            # faction = "<img src='faction_icon/50px-Np_1.png'/>海王星"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Np_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("海王星")
+        if faction == 'Hololive':
+            # faction = "<img src='faction_icon/50px-Um_1.png'/>Hololive"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("Hololive")
+        if faction == 'KizunaAI':
+            # faction = "<img src='faction_icon/50px-Um_1.png'/>KizunaAI"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("KizunaAI")
+        if faction == 'The Idolmaster':
+            faction = "<img src='faction_icon/50px-Um_1.png'/>偶像大师"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Um_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("偶像大师")
+        if faction == 'Iris Libre':
+            faction = "<img src='faction_icon/50px-Ff_1.png'/>自由鸢尾"
+            retrofit_soup.find(id='faction').string = ''
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("img", src="faction_icon/50px-Ff_1.png"))
+            retrofit_soup.find(id='faction').append(retrofit_soup.new_tag("br"))
+            retrofit_soup.find(id='faction').append("自由鸢尾")
+
+        # 120级满破改造数据
+        duration_120_r = str(data['stats']['level120Retrofit']['health'])  # HP
+        retrofit_soup.find(id='duration-120').string = duration_120_r
+        armor_120_r = str(data['stats']['level120Retrofit']['armor'])  # 装甲
+        if armor_120_r == 'Heavy':
+            retrofit_soup.find(id='armor-120').string = '重型'
+        if armor_120_r == 'Light':
+            retrofit_soup.find(id='armor-120').string = '轻型'
+        if armor_120_r == 'Medium':
+            retrofit_soup.find(id='armor-120').string = '中型'
+        refill_120_r = str(data['stats']['level120Retrofit']['reload'])  # 装填
+        retrofit_soup.find(id='refill-120').string = refill_120_r
+        luck_120_r = str(data['stats']['level120Retrofit']['luck'])  # 幸运
+        retrofit_soup.find(id='luck-120').string = luck_120_r
+        firepower_120_r = str(data['stats']['level120Retrofit']['firepower'])  # 炮击
+        retrofit_soup.find(id='firepower-120').string = firepower_120_r
+        torpedo_120_r = str(data['stats']['level120Retrofit']['torpedo'])  # 雷击
+        retrofit_soup.find(id='torpedo-120').string = torpedo_120_r
+        evasion_120_r = str(data['stats']['level120Retrofit']['evasion'])  # 机动
+        retrofit_soup.find(id='evasion-120').string = evasion_120_r
+        speed_120_r = str(data['stats']['level120Retrofit']['speed'])  # 航速
+        retrofit_soup.find(id='speed-120').string = speed_120_r
+        antiAir_120_r = str(data['stats']['level120Retrofit']['antiair'])  # 防空
+        retrofit_soup.find(id='antiAir-120').string = antiAir_120_r
+        aviation_120_r = str(data['stats']['level120Retrofit']['aviation'])  # 航空
+        retrofit_soup.find(id='aviation-120').string = aviation_120_r
+        consumption_120_r = str(data['stats']['level120Retrofit']['oilConsumption'])  # 油耗
+        retrofit_soup.find(id='consumption-120').string = consumption_120_r
+        hit_120_r = str(data['stats']['level120Retrofit']['accuracy'])  # 命中
+        retrofit_soup.find(id='hit-120').string = hit_120_r
+        asw_120_r = str(data['stats']['level120Retrofit']['antisubmarineWarfare'])  # 反潜
+        retrofit_soup.find(id='asw-120').string = asw_120_r
+
+        # 100级满破改造数据
+        duration_100_r = str(data['stats']['level100Retrofit']['health'])
+        retrofit_soup.find(id='duration-100').string = duration_100_r
+        armor_100_r = str(data['stats']['level100Retrofit']['armor'])
+        if armor_100_r == 'Heavy':
+            retrofit_soup.find(id='armor-100').string = '重型'
+        if armor_100_r == 'Light':
+            retrofit_soup.find(id='armor-100').string = '轻型'
+        if armor_100_r == 'Medium':
+            retrofit_soup.find(id='armor-100').string = '中型'
+        refill_100_r = str(data['stats']['level100Retrofit']['reload'])
+        retrofit_soup.find(id='refill-100').string = refill_100_r
+        luck_100_r = str(data['stats']['level100Retrofit']['luck'])
+        retrofit_soup.find(id='luck-100').string = luck_100_r
+        firepower_100_r = str(data['stats']['level100Retrofit']['firepower'])
+        retrofit_soup.find(id='firepower-100').string = firepower_100_r
+        torpedo_100_r = str(data['stats']['level100Retrofit']['torpedo'])
+        retrofit_soup.find(id='torpedo-100').string = torpedo_100_r
+        evasion_100_r = str(data['stats']['level100Retrofit']['evasion'])
+        retrofit_soup.find(id='evasion-100').string = evasion_100_r
+        speed_100_r = str(data['stats']['level100Retrofit']['speed'])
+        retrofit_soup.find(id='speed-100').string = speed_100_r
+        antiAir_100_r = str(data['stats']['level100Retrofit']['antiair'])
+        retrofit_soup.find(id='antiAir-100').string = antiAir_100_r
+        aviation_100_r = str(data['stats']['level100Retrofit']['aviation'])
+        retrofit_soup.find(id='aviation-100').string = aviation_100_r
+        consumption_100_r = str(data['stats']['level100Retrofit']['oilConsumption'])
+        retrofit_soup.find(id='consumption-100').string = consumption_100_r
+        hit_100_r = str(data['stats']['level100Retrofit']['accuracy'])
+        retrofit_soup.find(id='hit-100').string = hit_100_r
+        asw_100_r = str(data['stats']['level100Retrofit']['antisubmarineWarfare'])
+        retrofit_soup.find(id='asw-100').string = asw_100_r
+        retrofit_soup.find(id='type').string = ''
+        retrofit_soup.find(id='type').append(
+            retrofit_soup.new_tag("img", src="type_icon/30px-" + str(retrofitHullType[1]) + "_img40.png"))
+        retrofit_soup.find(id='type').append(retrofit_soup.new_tag("br"))
+        retrofit_soup.find(id='type').append(str(retrofitHullType[0]))
+
+        retrofit_soup.find(id='avatar').img.replace_with(retrofit_soup.new_tag("img", src="images/Texture2D/" + pinyin(
+            str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '_g.png'))
+        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_retrofit.html')),
+                  'w', encoding="utf-8") as fp:
+            fp.write(str(retrofit_soup.prettify()))
+        return 1  # 1可以改造，就去适配改造数据
+    else:
+        return 0  # 0不可以改造，就跳过
 
 
 """
@@ -940,14 +1137,13 @@ def force_update_offline():
     version_info = requests.get(VERSION_INFO).json()
     memories_info = requests.get(MEMORIES_INFO).json()
 
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','ships.json')),'wb') as f:
-        f.write(json.dumps(ship_list,ensure_ascii=False).encode())
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','chapters.json')),'wb') as f:
-        f.write(json.dumps(chapter_list,ensure_ascii=False).encode())
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','equipments.json')),'wb') as f:
-        f.write(json.dumps(equipment_list,ensure_ascii=False).encode())
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','version-info.json')),'wb') as f:
-        f.write(json.dumps(version_info,ensure_ascii=False).encode())
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data','memories.json')),'wb') as f:
-        f.write(json.dumps(memories_info,ensure_ascii=False).encode())
-
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'ships.json')), 'wb') as f:
+        f.write(json.dumps(ship_list, ensure_ascii=False).encode())
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'chapters.json')), 'wb') as f:
+        f.write(json.dumps(chapter_list, ensure_ascii=False).encode())
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'equipments.json')), 'wb') as f:
+        f.write(json.dumps(equipment_list, ensure_ascii=False).encode())
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'version-info.json')), 'wb') as f:
+        f.write(json.dumps(version_info, ensure_ascii=False).encode())
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'memories.json')), 'wb') as f:
+        f.write(json.dumps(memories_info, ensure_ascii=False).encode())

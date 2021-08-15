@@ -32,6 +32,30 @@ def print_img_ship():
     print("结束")
 
 
+def print_img_ship_retrofit():
+    # path_wkimg = SAVE_PATH + '/\\wkhtmltopdf/\\bin/\\wkhtmltoimage.exe'  # 工具路径
+    path_wkimg = tool_path
+    cfg = imgkit.config(wkhtmltoimage=path_wkimg)
+    options = {
+        "encoding": "UTF-8",
+        "enable-local-file-access": None
+    }
+    print("开始")
+    imgkit.from_file(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_retrofit.html')),
+                     os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_retrofit_temp.png')),
+                     options=options, config=cfg)  # 不管怎么样都打印这张图片
+    print("结束")
+
+
+
+
+def img_process_ship_retrofit():
+    # os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png'))
+    img = cv2.imread(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_retrofit_temp.png')))
+    image = img.shape
+    cropped = img[0:image[0], 0:620]  # 裁剪坐标为[y0:y1, x0:x1]
+    cv2.imwrite(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_retrofit.png')), cropped)
+
 """
 方法名：print_img_skin
 参数列表：无

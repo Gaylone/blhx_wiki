@@ -56,14 +56,22 @@ async def send_ship_skin_or_info(bot, ev):
                       encoding='utf-8') as load_f:
                 data = json.load(load_f)
             online_module = data['onlineModule']
-            format_data_into_html(get_ship_data_by_name(ship_name,online_module))
+            index = format_data_into_html(get_ship_data_by_name(ship_name,online_module))
             get_ship_weapon_by_ship_name(ship_name)
             print_img_ship()
             print_img_ship_weapon()
             img_process_ship_info()
             img_process_ship_weapon()
-            msg = "舰船信息\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_info.png") \
-                  + "推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")
+            if index == 0:
+                msg = "舰船信息\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_info.png") \
+                    + "推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")
+            else:
+                print_img_ship_retrofit()
+                img_process_ship_retrofit()
+                msg = "舰船信息\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_info.png") \
+                       +"此船可改\n" +MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_retrofit.png") \
+                      + "推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")
+
             msg_list = []
             msg_list.append(msg)
             forward_msg = render_forward_msg(msg_list)
