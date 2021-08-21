@@ -1147,3 +1147,15 @@ def force_update_offline():
         f.write(json.dumps(version_info, ensure_ascii=False).encode())
     with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'memories.json')), 'wb') as f:
         f.write(json.dumps(memories_info, ensure_ascii=False).encode())
+
+
+def get_recent_event():
+    base_url='https://wiki.biligame.com'
+    url = "https://wiki.biligame.com/blhx/首页"
+    response = requests.get(url, headers=header)
+    soup = BeautifulSoup(response.text, "lxml")
+    div_list=soup.find(class_='sy-left')
+    if div_list.a['href'] is not None and str( div_list.a['href'])!='':
+        return base_url+str(div_list.a['href'])
+    else:
+        return None

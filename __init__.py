@@ -1,5 +1,6 @@
 import shutil
 import traceback
+import urllib.parse
 
 from hoshino.typing import MessageSegment
 from hoshino import Service, priv
@@ -183,3 +184,14 @@ async def offline_module_off(bot, ev):
         traceback.print_exc()
         await bot.send(ev, '无法启动在线模式！', at_sender=True)
         return
+
+
+@sv.on_fullmatch('blhx 最新活动')
+async def get_recently_event(bot, ev):
+    msg = get_recent_event()
+    if msg is None :
+        await bot.send(ev, '程序开小差了~', at_sender=True)
+    else:
+        msg = str(urllib.parse.unquote(get_recent_event()))
+        await bot.send(ev, '详情请看'+msg, at_sender=True)
+
