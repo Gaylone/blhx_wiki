@@ -81,6 +81,7 @@ pip install azurlane
 pip install imgkit
 pip install beautifulsoup4
 pip install opencv-python
+pip install aiofiles
 pip install pypinyin
 ```
 
