@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from .tools import *
 from .headers import header
 
-MAIN_URL = "https://raw.githubusercontent.com/AzurAPI"
+MAIN_URL = "https://raw.fastgit.org/AzurAPI"
 SHIP_LIST = f"{MAIN_URL}/azurapi-js-setup/master/ships.json"
 CHAPTER_LIST = f"{MAIN_URL}/azurapi-js-setup/master/chapters.json"
 EQUIPMENT_LIST = f"{MAIN_URL}/azurapi-js-setup/master/equipments.json"
