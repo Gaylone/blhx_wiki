@@ -4,11 +4,10 @@ import imgkit
 import cv2
 import pypinyin
 import json
-
-from azurlane.azurapi import AzurAPI
+import aiofiles
 
 SAVE_PATH = os.path.dirname(__file__)
-tool_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'wkhtmltopdf', 'bin', 'wkhtmltoimage.exe'))
+tool_path = os.path.abspath(os.path.join(SAVE_PATH, 'wkhtmltopdf', 'bin', 'wkhtmltoimage.exe'))
 """
 方法名：print_img
 参数列表：无
@@ -26,8 +25,8 @@ def print_img_ship():
         "enable-local-file-access": None
     }
     print("开始")
-    imgkit.from_file(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_info.html')),
-                     os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png')),
+    imgkit.from_file(os.path.abspath(os.path.join(SAVE_PATH, 'ship_html', 'ship_info.html')),
+                     os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_temp.png')),
                      options=options, config=cfg)  # 不管怎么样都打印这张图片
     print("结束")
 
@@ -41,8 +40,8 @@ def print_img_ship_retrofit():
         "enable-local-file-access": None
     }
     print("开始")
-    imgkit.from_file(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_retrofit.html')),
-                     os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_retrofit_temp.png')),
+    imgkit.from_file(os.path.abspath(os.path.join(SAVE_PATH, 'ship_html', 'ship_retrofit.html')),
+                     os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_retrofit_temp.png')),
                      options=options, config=cfg)  # 不管怎么样都打印这张图片
     print("结束")
 
@@ -50,11 +49,11 @@ def print_img_ship_retrofit():
 
 
 def img_process_ship_retrofit():
-    # os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png'))
-    img = cv2.imread(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_retrofit_temp.png')))
+    # os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_temp.png'))
+    img = cv2.imread(os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_retrofit_temp.png')))
     image = img.shape
     cropped = img[0:image[0], 0:620]  # 裁剪坐标为[y0:y1, x0:x1]
-    cv2.imwrite(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_retrofit.png')), cropped)
+    cv2.imwrite(os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_retrofit.png')), cropped)
 
 """
 方法名：print_img_skin
@@ -71,9 +70,9 @@ def print_img_skin():
         "encoding": "UTF-8",
         "enable-local-file-access": None
     }
-    imgkit.from_file(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+    imgkit.from_file(os.path.abspath(os.path.join(SAVE_PATH, 'ship_html', 'ship_skin.html')),
                      os.path.abspath(
-                         os.path.join(os.path.dirname(__file__), 'images', 'ship_skin_mix', 'ship_skin.png')),
+                         os.path.join(SAVE_PATH, 'images', 'ship_skin_mix', 'ship_skin.png')),
                      options=options, config=cfg)  # 不管怎么样都打印这张图片
 
 
@@ -84,9 +83,9 @@ def print_img_ship_weapon():
         "encoding": "UTF-8",
         "enable-local-file-access": None
     }
-    imgkit.from_file(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_weapon.html')),
+    imgkit.from_file(os.path.abspath(os.path.join(SAVE_PATH, 'ship_html', 'ship_weapon.html')),
                      os.path.abspath(
-                         os.path.join(os.path.dirname(__file__), 'images', 'ship_weapon_temp.png')),
+                         os.path.join(SAVE_PATH, 'images', 'ship_weapon_temp.png')),
                      options=options, config=cfg)  # 不管怎么样都打印这张图片
 
 
@@ -99,11 +98,11 @@ def print_img_ship_weapon():
 
 
 def img_process_ship_info():
-    # os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png'))
-    img = cv2.imread(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_temp.png')))
+    # os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_temp.png'))
+    img = cv2.imread(os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_temp.png')))
     image = img.shape
     cropped = img[0:image[0], 0:620]  # 裁剪坐标为[y0:y1, x0:x1]
-    cv2.imwrite(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_info.png')), cropped)
+    cv2.imwrite(os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_info.png')), cropped)
 
     """
     方法名：img_process_ship_weapon
@@ -114,11 +113,11 @@ def img_process_ship_info():
 
 
 def img_process_ship_weapon():
-    # os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_weapon_temp.png'))
-    img = cv2.imread(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_weapon_temp.png')))
+    # os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_weapon_temp.png'))
+    img = cv2.imread(os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_weapon_temp.png')))
     image = img.shape
     cropped = img[0:image[0], 0:620]  # 裁剪坐标为[y0:y1, x0:x1]
-    cv2.imwrite(os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'ship_weapon.png')), cropped)
+    cv2.imwrite(os.path.abspath(os.path.join(SAVE_PATH, 'images', 'ship_weapon.png')), cropped)
 
 
 def translate_ship_type(english):
@@ -159,26 +158,13 @@ def pinyin(word):
     return s
 
 
-def get_local_version():
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'version-info.json')), 'r',
+async def get_local_version():
+    async with aiofiles.open(os.path.abspath(os.path.join(SAVE_PATH, 'azurapi_data', 'version-info.json')), 'r',
               encoding='utf-8') as load_f:
-        load_dict = json.load(load_f)
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
     return load_dict['ships']
 
 
-def get_online_version():
-    api = AzurAPI()
-    api.updater.update()
-    return str(api.getVersion())
 
 
-def online_module_on():
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config.json')), 'w',
-              encoding='utf-8') as load_f:
-        load_f.write(json.dumps({'onlineModule': True}))
-
-
-def online_module_off():
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config.json')), 'w',
-              encoding='utf-8') as load_f:
-        load_f.write(json.dumps({'onlineModule': False}))

@@ -1,7 +1,7 @@
 import shutil
 import traceback
 import urllib.parse
-
+import aiofiles
 from hoshino.typing import MessageSegment
 from hoshino import Service, priv
 
@@ -37,7 +37,7 @@ async def send_ship_skin_or_info(bot, ev):
         if len(args) == 2:
             ship_name = str(args[0])
             skin_name = str(args[1]).replace("_", (" "))
-            flag = get_ship_skin_by_name(ship_name, skin_name)
+            flag = await get_ship_skin_by_name(ship_name, skin_name)
             if flag == 4:
                 msg = "她没有这个皮肤！"
                 await bot.send(ev, msg, at_sender=True)
@@ -53,24 +53,20 @@ async def send_ship_skin_or_info(bot, ev):
                 return
         if len(args) == 1:
             ship_name = str(args[0])
-            with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config.json')), 'r',
-                      encoding='utf-8') as load_f:
-                data = json.load(load_f)
-            online_module = data['onlineModule']
-            index = format_data_into_html(get_ship_data_by_name(ship_name,online_module))
-            get_ship_weapon_by_ship_name(ship_name)
+            index = await format_data_into_html(await get_ship_data_by_name(ship_name))
+            await get_ship_weapon_by_ship_name(ship_name)
             print_img_ship()
             print_img_ship_weapon()
             img_process_ship_info()
             img_process_ship_weapon()
             if index == 0:
                 msg = "舰船信息\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_info.png") \
-                    + "推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")
+                      + "推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")
             else:
                 print_img_ship_retrofit()
                 img_process_ship_retrofit()
                 msg = "舰船信息\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_info.png") \
-                       +"此船可改\n" +MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_retrofit.png") \
+                      + "此船可改\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_retrofit.png") \
                       + "推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")
 
             msg_list = []
@@ -118,7 +114,7 @@ async def send_pve_recommendation(bot, ev):
         await bot.send(ev, '暂无信息', at_sender=True)
 
 
-@sv.on_fullmatch('blhx 强制更新', )
+@sv.on_fullmatch('blhx 强制更新')
 async def force_update(bot, ev):
     if not priv.check_priv(ev, priv.SUPERUSER):
         await bot.send(ev, '仅限主人做这种事情~', at_sender=True)
@@ -126,21 +122,13 @@ async def force_update(bot, ev):
     print("命令确认，正在删除")
     try:
         await bot.send(ev, '正在更新，首先请确保网络能访问github的文件中心，否则容易出现翻车风险！', at_sender=True)
-        force_update_offline()
+        await force_update_offline()
         os.rename(PATH, BACK_PATH)  # 备份源文件省得出意外翻车
-        force_update_offline()  # 再更新
+        await force_update_offline()  # 再更新
         shutil.rmtree(BACK_PATH)  # 更新完成再删除备份
-        await bot.send(ev, '强制更新完成.强制更新内容仅在离线模式下有效', at_sender=True)
-        try:
-            online_version = get_online_version()
-            data = get_local_version()
-            await bot.send(ev, '当前离线舰船版本：' + str(data['version-number']) + "\n当前API版本：" + online_version,
-                           at_sender=True)
-            return
-        except:
-            traceback.print_exc()
-            await bot.send(ev, "别慌，主体更新完成了，版本号获取有点问题，不碍事呵呵....", at_sender=True)
-            return
+        version_info = await get_local_version()
+        version = str(version_info['version-number'])
+        await bot.send(ev, '强制更新完成.强制更新内容仅在离线模式下有效，当前版本V'+version, at_sender=True)
     except:
         # 出问题赶紧回滚
         traceback.print_exc()
@@ -154,44 +142,10 @@ async def force_update(bot, ev):
             return
 
 
-@sv.on_fullmatch('blhx 启用离线模式')
-async def offline_module_on(bot, ev):
-    if not priv.check_priv(ev, priv.SUPERUSER):
-        await bot.send(ev, '仅限主人做这种事情~', at_sender=True)
-        return
-    print("命令确认，离线模式启动中...")
-    try:
-        online_module_off()
-        await bot.send(ev, '离线模式已启动！请注意本地数据时效性！', at_sender=True)
-        return
-    except:
-        traceback.print_exc()
-        await bot.send(ev, '无法启动离线模式！', at_sender=True)
-        return
-
-
-@sv.on_fullmatch('blhx 启用在线模式')
-async def offline_module_off(bot, ev):
-    if not priv.check_priv(ev, priv.SUPERUSER):
-        await bot.send(ev, '仅限主人做这种事情~', at_sender=True)
-        return
-    print("命令确认，在线模式启动中...")
-    try:
-        online_module_on()
-        await bot.send(ev, '在线模式已启动！请注意网络环境！', at_sender=True)
-        return
-    except:
-        traceback.print_exc()
-        await bot.send(ev, '无法启动在线模式！', at_sender=True)
-        return
-
-
 @sv.on_fullmatch('blhx 最新活动')
 async def get_recently_event(bot, ev):
     msg = get_recent_event()
-    if msg is None :
+    if msg is None:
         await bot.send(ev, '程序开小差了~', at_sender=True)
     else:
-        msg = str(urllib.parse.unquote(get_recent_event()))
-        await bot.send(ev, '详情请看'+msg, at_sender=True)
-
+        await bot.send(ev, '详情请看' + str(msg), at_sender=True)

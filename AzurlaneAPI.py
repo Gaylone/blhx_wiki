@@ -1,7 +1,7 @@
 import json
 import os
 import random
-
+import aiofiles
 import requests
 from azurlane import AzurAPI
 from bs4 import BeautifulSoup
@@ -16,7 +16,6 @@ VERSION_INFO = f"{MAIN_URL}/azurapi-js-setup/master/version-info.json"
 MEMORIES_INFO = f"{MAIN_URL}/azurapi-js-setup/master/memories.json"
 AVAILABLE_LANGS = ["en", "cn", "jp", "kr", "code", "official"]
 SAVE_PATH = os.path.dirname(__file__)
-
 """
 方法名：get_ship_data_by_name
 参数：name(string)
@@ -25,25 +24,17 @@ SAVE_PATH = os.path.dirname(__file__)
 """
 
 
-def get_ship_data_by_name(name, online):
-    if online:
-        try:
-            api = AzurAPI()
-            api.updater.update()
-            result = api.getShipByChineseName(str(name))  # 返回一个字典
+async def get_ship_data_by_name(name):
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'ships.json')), 'r',
+                encoding='utf-8') as load_f:
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
+    for result in load_dict:
+        if str(result['names']['cn']) == str(name):
             return result
-        except:
-            return None
-    else:
-        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'ships.json')), 'r',
-                  encoding='utf-8') as load_f:
-            load_dict = json.load(load_f)
-        for result in load_dict:
-            if str(result['names']['cn']) == str(name):
-                return result
-            else:
-                continue
-        return None
+        else:
+            continue
+    return None
 
 
 """
@@ -54,15 +45,16 @@ def get_ship_data_by_name(name, online):
 """
 
 
-def format_data_into_html(data):
+async def format_data_into_html(data):
     # 读入html备用
     soup = BeautifulSoup(
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_temp.html')), encoding='UTF-8'),
         "lxml")
     # 读入bwiki数据
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ships_plus.json')), 'r',
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ships_plus.json')), 'r',
               encoding='utf-8') as load_f:
-        load_dict = json.load(load_f)
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
     data_plus = {}
     for i in range(0, len(load_dict)):
         if str(data['id']) == str(load_dict[i]['编号']):
@@ -761,9 +753,9 @@ def format_data_into_html(data):
 
     # 处理完毕，保存
 
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_info.html')),
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_info.html')),
               'w', encoding="utf-8") as fp:
-        fp.write(str(soup.prettify()))
+        await fp.write(str(soup.prettify()))
 
     if 'retrofitHullType' in data:
         # 读入html备用
@@ -955,9 +947,9 @@ def format_data_into_html(data):
 
         retrofit_soup.find(id='avatar').img.replace_with(retrofit_soup.new_tag("img", src="images/Texture2D/" + pinyin(
             str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '_g.png'))
-        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_retrofit.html')),
+        async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_retrofit.html')),
                   'w', encoding="utf-8") as fp:
-            fp.write(str(retrofit_soup.prettify()))
+            await fp.write(str(retrofit_soup.prettify()))
         return 1  # 1可以改造，就去适配改造数据
     else:
         return 0  # 0不可以改造，就跳过
@@ -971,16 +963,12 @@ def format_data_into_html(data):
 """
 
 
-def get_ship_skin_by_name(ship_name, skin_name):
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config.json')), 'r',
-              encoding='utf-8') as load_f:
-        data = json.load(load_f)
-    online_module = data['onlineModule']
+async def get_ship_skin_by_name(ship_name, skin_name):
     soup = BeautifulSoup(
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
              encoding='UTF-8'),
         "lxml")
-    result = get_ship_data_by_name(str(ship_name), online_module)
+    result = await get_ship_data_by_name(str(ship_name))
     ship_skin_list = result['skins']
     image_path = ''
     background_path = ''
@@ -1000,9 +988,9 @@ def get_ship_skin_by_name(ship_name, skin_name):
         soup.find(id='img-content').append(
             soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
         os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html'))
-        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+        async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
                   'w', encoding="utf-8") as fp:
-            fp.write(str(soup.prettify()))
+            await fp.write(str(soup.prettify()))
         return 0
 
     if len(ship_skin_list) < 2:
@@ -1023,9 +1011,9 @@ def get_ship_skin_by_name(ship_name, skin_name):
                 soup.find(id='img-content').append(
                     soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
 
-                with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
                           'w', encoding="utf-8") as fp:
-                    fp.write(str(soup.prettify()))
+                    await fp.write(str(soup.prettify()))
                 return 0
     # 处理改造
     if skin_name == '改造':
@@ -1043,9 +1031,9 @@ def get_ship_skin_by_name(ship_name, skin_name):
                 soup.find(id='img-content').append(
                     soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
 
-                with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
                           'w', encoding="utf-8") as fp:
-                    fp.write(str(soup.prettify()))
+                    await fp.write(str(soup.prettify()))
                 return 0
     # 处理普通皮肤
     for i in range(1, len(ship_skin_list)):
@@ -1065,9 +1053,9 @@ def get_ship_skin_by_name(ship_name, skin_name):
                 soup.find(id='img-content').append(
                     soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
 
-                with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
                           'w', encoding="utf-8") as fp:
-                    fp.write(str(soup.prettify()))
+                    await fp.write(str(soup.prettify()))
                 return 0
             else:
                 continue
@@ -1114,7 +1102,7 @@ def get_pve_recommendation():
 """
 
 
-def get_ship_weapon_by_ship_name(name):
+async def get_ship_weapon_by_ship_name(name):
     url = "https://wiki.biligame.com/blhx/" + str(name)
     response = requests.get(url, headers=header)
     soup = BeautifulSoup(response.text, "lxml")
@@ -1123,30 +1111,30 @@ def get_ship_weapon_by_ship_name(name):
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_weapon_temp.html')),
              encoding='UTF-8'), "lxml")
     target_soup.find('body').append(div_list)
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_weapon.html')),
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_weapon.html')),
               'w', encoding="utf-8") as fp:
-        fp.write(str(target_soup.prettify()))
+        await fp.write(str(target_soup.prettify()))
 
 
-def force_update_offline():
-    if not os.path.exists(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data'))):
-        os.mkdir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data')))
+async def force_update_offline():
+    if not os.path.exists(os.path.abspath(os.path.join(SAVE_PATH, 'azurapi_data'))):
+        os.mkdir(os.path.abspath(os.path.join(SAVE_PATH, 'azurapi_data')))
     ship_list = requests.get(SHIP_LIST).json()
     chapter_list = requests.get(CHAPTER_LIST).json()
     equipment_list = requests.get(EQUIPMENT_LIST).json()
     version_info = requests.get(VERSION_INFO).json()
     memories_info = requests.get(MEMORIES_INFO).json()
 
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'ships.json')), 'wb') as f:
-        f.write(json.dumps(ship_list, ensure_ascii=False).encode())
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'chapters.json')), 'wb') as f:
-        f.write(json.dumps(chapter_list, ensure_ascii=False).encode())
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'equipments.json')), 'wb') as f:
-        f.write(json.dumps(equipment_list, ensure_ascii=False).encode())
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'version-info.json')), 'wb') as f:
-        f.write(json.dumps(version_info, ensure_ascii=False).encode())
-    with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'memories.json')), 'wb') as f:
-        f.write(json.dumps(memories_info, ensure_ascii=False).encode())
+    async with aiofiles.open(os.path.abspath(os.path.join(SAVE_PATH,'azurapi_data', 'ships.json')), 'wb') as f:
+        await f.write(json.dumps(ship_list, ensure_ascii=False).encode())
+    async with aiofiles.open(os.path.abspath(os.path.join(SAVE_PATH,'azurapi_data', 'chapters.json')), 'wb') as f:
+        await f.write(json.dumps(chapter_list, ensure_ascii=False).encode())
+    async with aiofiles.open(os.path.abspath(os.path.join(SAVE_PATH, 'azurapi_data', 'equipments.json')), 'wb') as f:
+        await f.write(json.dumps(equipment_list, ensure_ascii=False).encode())
+    async with aiofiles.open(os.path.abspath(os.path.join(SAVE_PATH,'azurapi_data', 'version-info.json')), 'wb') as f:
+        await f.write(json.dumps(version_info, ensure_ascii=False).encode())
+    async with aiofiles.open(os.path.abspath(os.path.join(SAVE_PATH,'azurapi_data', 'memories.json')), 'wb') as f:
+        await f.write(json.dumps(memories_info, ensure_ascii=False).encode())
 
 
 def get_recent_event():
