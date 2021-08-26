@@ -451,25 +451,25 @@ async def format_data_into_html(data):
             soup.find(id='type').append(soup.new_tag("br"))
             soup.find(id='type').append(str(retrofitHullType[0]))
     # 性格
-    character = str(data_plus['性格'])
+    character = str(data_plus.get('性格',''))
     soup.find(id='character').string = character
     # 身份
-    who = str(data_plus['身份'])
+    who = str(data_plus.get('身份',''))
     soup.find(id='who').string = who
     # 关键词
-    keyword = str(data_plus['关键词'])
+    keyword = str(data_plus.get('关键词',''))
     soup.find(id='keyword').string = keyword
     # 持有物
-    holdings = str(data_plus['持有物'])
+    holdings = str(data_plus.get('持有物',''))
     soup.find(id='holdings').string = holdings
     # 发色瞳色
-    hair = str(data_plus['发色'])
-    eyes = str(data_plus['瞳色'])
+    hair = str(data_plus.get('发色',''))
+    eyes = str(data_plus.get('瞳色',''))
     soup.find(id='hair_eyes').string = hair
     soup.find(id='hair_eyes').append(soup.new_tag('br'))
     soup.find(id="hair_eyes").append(eyes)
     # 萌点
-    adorable = str(data_plus['萌点'])
+    adorable = str(data_plus.get('萌点',''))
     soup.find(id='adorable').string = adorable
     # 评价
     if '评价' in data_plus:
@@ -595,7 +595,7 @@ async def format_data_into_html(data):
     # 1号栏武器装备
     slots_1_efficiency = str(data['slots'][0]['minEfficiency']) + "% → " + str(data['slots'][0]['maxEfficiency']) + "%"
     soup.find(id='slots_1_efficiency').string = slots_1_efficiency
-    slots_1_equippable = str(data_plus['武器装备'][0]['类型'])  # str(data['slots'][0]['type'])
+    slots_1_equippable = str(data_plus.get('武器装备',[{}])[0].get('类型',str(data['slots'][0]['type'])))  # str(data['slots'][0]['type'])
     soup.find(id='slots_1_equippable').string = slots_1_equippable
     slots_1_max = str(data['slots'][0]['max'])
     soup.find(id='slots_1_max').string = slots_1_max
@@ -603,7 +603,7 @@ async def format_data_into_html(data):
     # 2号栏武器装备
     slots_2_efficiency = str(data['slots'][1]['minEfficiency']) + "% → " + str(data['slots'][1]['maxEfficiency']) + "%"
     soup.find(id='slots_2_efficiency').string = slots_2_efficiency
-    slots_2_equippable = str(data_plus['武器装备'][1]['类型'])  # str(data['slots'][1]['type'])
+    slots_2_equippable = str(data_plus.get('武器装备',[{},{}])[1].get('类型',str(data['slots'][1]['type'])))  # str(data['slots'][1]['type'])
     soup.find(id='slots_2_equippable').string = slots_2_equippable
     slots_2_max = str(data['slots'][1]['max'])
     soup.find(id='slots_2_max').string = slots_2_max
@@ -611,7 +611,7 @@ async def format_data_into_html(data):
     # 3号栏武器装备
     slots_3_efficiency = str(data['slots'][2]['minEfficiency']) + "% → " + str(data['slots'][2]['maxEfficiency']) + "%"
     soup.find(id='slots_3_efficiency').string = slots_3_efficiency
-    slots_3_equippable = str(data_plus['武器装备'][2]['类型'])  # str(data['slots'][2]['type'])
+    slots_3_equippable = str(data_plus.get('武器装备',[{},{},{}])[2].get('类型',str(data['slots'][2]['type'])))  # str(data['slots'][2]['type'])
     soup.find(id='slots_3_equippable').string = slots_3_equippable
     slots_3_max = str(data['slots'][2]['max'])
     soup.find(id='slots_3_max').string = slots_3_max
@@ -624,7 +624,7 @@ async def format_data_into_html(data):
         skill_text += ("<tr><td ><img src='" + str(skills[i]['icon']).replace(
             "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "") \
                        + "' width='60px' height='60px'/>" + str(skills[i]['names']['cn']) \
-                       + "</td></tr><tr><td>" + str(data_plus['技能'][i]['效果']) + "</td></tr>")
+                       + "</td></tr><tr><td>" + str(data_plus.get('技能', [{},{},{},{},{},{}])[i].get('效果',str(skills[i]['description']))) + "</td></tr>")  # 被逼无奈只能这样
     extraSoup = BeautifulSoup(skill_text, "lxml")
     soup.find(id='skill').append(extraSoup)
 
@@ -634,18 +634,18 @@ async def format_data_into_html(data):
     if breaks is not None and breaks != -1:
         breaks_tr_body = ''
         break_text = []
-        break_1 = break_2 = break_3 = ''
-        # for break_ in breaks[0]:
-        #     break_1 += ("●" + str(break_) + "<br>")
-        break_1 = ("●" + str(data_plus['突破'][0]['一阶']).replace('/', '<br>●'))
+        break_1 = break_2 = break_3 = str_1 = str_2 = str_3 = ''
+        for break_ in breaks[0]:
+            str_1 += ("●" + str(break_) + "<br>")
+        break_1 = ("●" + str(data_plus.get('突破',[{}])[0].get('一阶',str_1)).replace('/', '<br>●'))
         break_text.append(break_1)
-        # for break_ in breaks[1]:
-        #     break_2 += ("●" + str(break_) + "<br>")
-        break_2 = ("●" + str(data_plus['突破'][1]['二阶']).replace('/', '<br>●'))
+        for break_ in breaks[1]:
+            str_2 += ("●" + str(break_) + "<br>")
+        break_2 = ("●" + str(data_plus.get('突破',[{},{}])[1].get('二阶',str_2)).replace('/', '<br>●'))
         break_text.append(break_2)
-        # for break_ in breaks[2]:
-        #     break_3 += ("●" + str(break_) + "<br>")
-        break_3 = ("●" + str(data_plus['突破'][2]['三阶']).replace('/', '<br>●'))
+        for break_ in breaks[2]:
+            str_3 += ("●" + str(break_) + "<br>")
+        break_3 = ("●" + str(data_plus.get('突破',[{},{},{}])[2].get('三阶',str_3)).replace('/', '<br>●'))
         break_text.append(break_3)
         for i in range(0, 3):
             breaks_tr_body += (
@@ -658,30 +658,30 @@ async def format_data_into_html(data):
         breaks = data["devLevels"]  # 数组
         breaks_tr_body = ''
         break_text = []
-        break_1 = break_2 = break_3 = break_4 = break_5 = break_6 = ''
-        # for break_ in breaks[0]['buffs']:
-        #     break_1 += ("●" + str(break_) + "<br>")
-        break_1 = ("●" + str(data_plus['突破'][2]['5级']).replace('/', '<br>●'))
+        break_1 = break_2 = break_3 = break_4 = break_5 = break_6 = str_1 = str_2 = str_3 = str_4 = str_5 = str_6=''
+        for break_ in breaks[0]['buffs']:
+            str_1 += ("●" + str(break_) + "<br>")
+        break_1 = ("●" + str(data_plus.get('突破',[{},{},{}])[2].get('5级',str_1)).replace('/', '<br>●'))
         break_text.append(break_1)
-        # for break_ in breaks[1]['buffs']:
-        #     break_2 += ("●" + str(break_) + "<br>")
-        break_2 = ("●" + str(data_plus['突破'][3]['10级']).replace('/', '<br>●'))
+        for break_ in breaks[1]['buffs']:
+            str_2 += ("●" + str(break_) + "<br>")
+        break_2 = ("●" + str(data_plus.get('突破',[{},{},{},{}])[3].get('10级',str_2)).replace('/', '<br>●'))
         break_text.append(break_2)
-        # for break_ in breaks[2]['buffs']:
-        #     break_3 += ("●" + str(break_) + "<br>")
-        break_3 = ("●" + str(data_plus['突破'][4]['15级']).replace('/', '<br>●'))
+        for break_ in breaks[2]['buffs']:
+            str_3 += ("●" + str(break_) + "<br>")
+        break_3 = ("●" + str(data_plus.get('突破',[{},{},{},{},{}])[4].get('15级',str_3)).replace('/', '<br>●'))
         break_text.append(break_3)
-        # for break_ in breaks[3]['buffs']:
-        #     break_4 += ("●" + str(break_) + "<br>")
-        break_4 = ("●" + str(data_plus['突破'][5]['20级']).replace('/', '<br>●'))
+        for break_ in breaks[3]['buffs']:
+            str_4 += ("●" + str(break_) + "<br>")
+        break_4 = ("●" + str(data_plus.get('突破',[{},{},{},{},{},{}])[5].get('20级',str_4)).replace('/', '<br>●'))
         break_text.append(break_4)
-        # for break_ in breaks[4]['buffs']:
-        #     break_5 += ("●" + str(break_) + "<br>")
-        break_5 = ("●" + str(data_plus['突破'][6]['25级']).replace('/', '<br>●'))
+        for break_ in breaks[4]['buffs']:
+            str_5 += ("●" + str(break_) + "<br>")
+        break_5 = ("●" + str(data_plus.get('突破',[{},{},{},{},{},{},{}])[6].get('25级',str_5)).replace('/', '<br>●'))
         break_text.append(break_5)
-        # for break_ in breaks[5]['buffs']:
-        #     break_6 += ("●" + str(break_) + "<br>")
-        break_6 = ("●" + str(data_plus['突破'][7]['30级']).replace('/', '<br>●'))
+        for break_ in breaks[5]['buffs']:
+            str_6 += ("●" + str(break_) + "<br>")
+        break_6 = ("●" + str(data_plus.get('突破',[{},{},{},{},{},{},{},{}])[7].get('30级',str_6)).replace('/', '<br>●'))
         break_text.append(break_6)
         for i in range(0, 6):
             breaks_tr_body += (
