@@ -636,20 +636,20 @@ async def format_data_into_html(data):
         break_text = []
         break_1 = break_2 = break_3 = str_1 = str_2 = str_3 = ''
         for break_ in breaks[0]:
-            str_1 += ("●" + str(break_) + "<br>")
-        break_1 = ("●" + str(data_plus.get('突破',[{}])[0].get('一阶',str_1)).replace('/', '<br>●'))
+            str_1 += ("" + str(break_) + "<br>")
+        break_1 = ("" + str(data_plus.get('突破',[{},{}])[1].get('一阶',str_1)).replace('/', '<br>●'))
         break_text.append(break_1)
         for break_ in breaks[1]:
-            str_2 += ("●" + str(break_) + "<br>")
-        break_2 = ("●" + str(data_plus.get('突破',[{},{}])[1].get('二阶',str_2)).replace('/', '<br>●'))
+            str_2 += ("" + str(break_) + "<br>")
+        break_2 = ("●" + str(data_plus.get('突破',[{},{},{}])[2].get('二阶',str_2)).replace('/', '<br>●'))
         break_text.append(break_2)
         for break_ in breaks[2]:
-            str_3 += ("●" + str(break_) + "<br>")
-        break_3 = ("●" + str(data_plus.get('突破',[{},{},{}])[2].get('三阶',str_3)).replace('/', '<br>●'))
+            str_3 += ("" + str(break_) + "<br>")
+        break_3 = ("●" + str(data_plus.get('突破',[{},{},{},{}])[3].get('三阶',str_3)).replace('/', '<br>●'))
         break_text.append(break_3)
         for i in range(0, 3):
             breaks_tr_body += (
-                    "<tr><th colspan='1' scope='col' width='80px'>" + str(i) + "破</th><td colspan='2'>" + str(
+                    "<tr><th colspan='1' scope='col' width='100px'>" + str(i) + "破</th><td colspan='2'>" + str(
                 break_text[i]) + "</td></tr>")
         breaksoup = BeautifulSoup(breaks_tr_body, 'lxml')
         soup.find(id='break').append(breaksoup)
@@ -685,12 +685,12 @@ async def format_data_into_html(data):
         break_text.append(break_6)
         for i in range(0, 6):
             breaks_tr_body += (
-                    "<tr><th colspan='1' scope='col' width='80px'>科研" + str(
+                    "<tr><th colspan='1' scope='col' width='100px'>科研" + str(
                 (i + 1) * 5) + "级</th><td colspan='2'>" + str(break_text[i]) + "</td></tr>")
         breaksoup = BeautifulSoup(breaks_tr_body, "html.parser")
         soup.find(id='break').append(breaksoup)
     else:
-        new_tag = soup.new_tag("tr")
+        new_tag = soup.new_tag("td")
         new_tag.string = '不可突破'
         soup.find(id='break').append(new_tag)
 
@@ -742,10 +742,10 @@ async def format_data_into_html(data):
                     live2d = "否"
                 if skin['name'] == "Retrofit":
                     skin_text += (
-                            "<tr><th  scope='col' width='80px'>名称</th><td>" + "改造" + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
+                            "<tr><th  scope='col' width='100px'>名称</th><td>" + "改造" + "</td><th  scope='col'width='100px'>Live2D</th><td>" + live2d + "</td></tr>")
 
-                skin_text += ("<tr><th  scope='col' width='80px'>名称</th><td>" + str(skin['info'][
-                                                                                        'cnClient']) + "</td><th  scope='col'width='80px'>Live2D</th><td>" + live2d + "</td></tr>")
+                skin_text += ("<tr><th  scope='col' width='100px'>名称</th><td>" + str(skin['info'][
+                                                                                        'cnClient']) + "</td><th  scope='col'width='100px'>Live2D</th><td>" + live2d + "</td></tr>")
             except:
                 continue
     extraSoup = BeautifulSoup(skin_text, "lxml")
