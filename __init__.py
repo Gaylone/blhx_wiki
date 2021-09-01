@@ -16,7 +16,7 @@ SAVE_PATH = os.path.dirname(__file__)
 sv = Service('blhx_wiki')
 
 
-def render_forward_msg(msg_list: list, uid=10007, name='马化腾'):
+def render_forward_msg(msg_list: list, uid=1916714922, name='小加加(VC装甲钢36D版)'):
     forward_msg = []
     for msg in msg_list:
         forward_msg.append({
