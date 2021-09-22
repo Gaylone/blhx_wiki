@@ -1082,6 +1082,43 @@ async def get_ship_skin_by_id(id, skin_name):
     return 4
 
 
+
+async def get_ship_skin_by_id_with_index(id, index):
+    soup = BeautifulSoup(
+        open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+             encoding='UTF-8'),
+        "lxml")
+    result = await get_ship_data_by_id(str(id))
+    ship_skin_list = result['skins']
+    image_path = ''
+    background_path = ''
+    chibi_path = ''
+    # 处理原皮
+    if index > len(ship_skin_list):
+        return -1
+    else:
+        image_path = str(ship_skin_list[index]['image']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+        background_path = str(ship_skin_list[index]['background']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+        chibi_path = str(ship_skin_list[index]['chibi']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+
+        soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
+        soup.find(id='img-content').string = ''
+        soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
+        soup.find(id='img-content').append(
+            soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
+        os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html'))
+        async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                  'w', encoding="utf-8") as fp:
+            await fp.write(str(soup.prettify()))
+        return 0
+
+
+
+
+
 """
 方法名：get_random_gallery
 参数：无

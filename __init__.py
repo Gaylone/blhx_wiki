@@ -228,4 +228,33 @@ async def remove_nickname(bot, ev):
         return
 
 
+@sv.on_prefix('blhx皮肤')
+async def quick_search_skin(bot, ev):
+    try:
+        args = ev.message.extract_plain_text().split()
+        if len(args) == 2:
+            skin_index = int(args[1])
+            ship_name = str(args[0])
+            ship_nickname_data = await GetIDByNickname(ship_name)
+            if ship_nickname_data == -1:
+                msg = "该昵称下查不到舰船信息，请核对输入，如果想为她新增昵称请发送： blhx备注 正式船名 昵称"
+                await bot.send(ev, msg, at_sender=True)
+                return
+            else:
+                ship_id = ship_nickname_data['id']
 
+            flag = await get_ship_skin_by_id_with_index(str(ship_id), skin_index)
+            if flag == -1:
+                msg = "她没有这个皮肤！"
+                await bot.send(ev, msg, at_sender=True)
+                return
+            if flag == 0:
+                print_img_skin()
+                msg = MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_skin_mix/ship_skin.png")
+                await bot.send(ev, msg, at_sender=True)
+                return
+    except:
+        msg = '处理出错，请看日志'
+        traceback.print_exc()
+        await bot.send(ev, str(msg), at_sender=True)
+        return
