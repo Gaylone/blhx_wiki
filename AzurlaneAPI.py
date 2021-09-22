@@ -38,6 +38,24 @@ async def get_ship_data_by_name(name):
 
 
 """
+方法名：get_ship_data_by_id
+参数：name(string)
+返回值：result(字典)
+说明：该方法作用是通过碧蓝航线api，用舰船id获取舰船数据，返回一个数据字典供html适配数据调用
+"""
+
+async def get_ship_data_by_id(id):
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'ships.json')), 'r',
+                encoding='utf-8') as load_f:
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
+    for result in load_dict:
+        if str(result['id']) == str(id):
+            return result
+        else:
+            continue
+    return None
+"""
 方法名：format_data_into_html
 参数：data(字典)
 返回值：无
@@ -963,12 +981,12 @@ async def format_data_into_html(data):
 """
 
 
-async def get_ship_skin_by_name(ship_name, skin_name):
+async def get_ship_skin_by_id(id, skin_name):
     soup = BeautifulSoup(
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
              encoding='UTF-8'),
         "lxml")
-    result = await get_ship_data_by_name(str(ship_name))
+    result = await get_ship_data_by_id(str(id))
     ship_skin_list = result['skins']
     image_path = ''
     background_path = ''

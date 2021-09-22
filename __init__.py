@@ -6,6 +6,8 @@ from hoshino.typing import MessageSegment
 from hoshino import Service, priv
 
 import os
+
+from .names import *
 from .tools import *
 from .AzurlaneAPI import *
 
@@ -37,7 +39,15 @@ async def send_ship_skin_or_info(bot, ev):
         if len(args) == 2:
             ship_name = str(args[0])
             skin_name = str(args[1]).replace("_", (" "))
-            flag = await get_ship_skin_by_name(ship_name, skin_name)
+            ship_nickname_data = await GetIDByNickname(ship_name)
+            if ship_nickname_data == -1 :
+                msg = "该昵称下查不到舰船信息，请核对输入，如果想为她新增昵称请发送： blhx备注 正式船名 昵称"
+                await bot.send(ev, msg, at_sender=True)
+                return
+            else:
+                ship_id = ship_nickname_data['id']
+
+            flag = await get_ship_skin_by_id(str(ship_id), skin_name)
             if flag == 4:
                 msg = "她没有这个皮肤！"
                 await bot.send(ev, msg, at_sender=True)
@@ -52,22 +62,29 @@ async def send_ship_skin_or_info(bot, ev):
                 await bot.send(ev, msg, at_sender=True)
                 return
         if len(args) == 1:
+            nickname_list = ''
             ship_name = str(args[0])
-            index = await format_data_into_html(await get_ship_data_by_name(ship_name))
-            await get_ship_weapon_by_ship_name(ship_name)
+            ship_nickname_data = await GetIDByNickname(ship_name)
+            ship_nickname_list = await GetAllNickname(ship_nickname_data['id'])
+            for string in ship_nickname_list:
+                nickname_list+=(str(string)+"\n")
+
+            index = await format_data_into_html(await get_ship_data_by_id(ship_nickname_data['id']))
+            await get_ship_weapon_by_ship_name(ship_nickname_data['standred_name'])
             print_img_ship()
             print_img_ship_weapon()
             img_process_ship_info()
             img_process_ship_weapon()
             if index == 0:
                 msg = "舰船信息\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_info.png") \
-                      + "推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")
+                      + "\n推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")+ "\n此船备注昵称有：\n"+nickname_list
             else:
                 print_img_ship_retrofit()
                 img_process_ship_retrofit()
                 msg = "舰船信息\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_info.png") \
-                      + "此船可改\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_retrofit.png") \
-                      + "推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")
+                      + "\n此船可改\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_retrofit.png") \
+                      + "\n推荐出装\n" + MessageSegment.image("file:///" + SAVE_PATH + "/images/ship_weapon.png")\
+                      + "\n此船备注昵称有：\n"+nickname_list
 
             msg_list = []
             msg_list.append(msg)
@@ -128,6 +145,7 @@ async def force_update(bot, ev):
         shutil.rmtree(BACK_PATH)  # 更新完成再删除备份
         version_info = await get_local_version()
         version = str(version_info['version-number'])
+        await UpdateName()
         await bot.send(ev, '强制更新完成.强制更新内容仅在离线模式下有效，当前版本V'+version, at_sender=True)
     except:
         # 出问题赶紧回滚
@@ -149,3 +167,65 @@ async def get_recently_event(bot, ev):
         await bot.send(ev, '程序开小差了~', at_sender=True)
     else:
         await bot.send(ev, '详情请看' + str(msg), at_sender=True)
+
+@sv.on_prefix('blhx备注')
+async def set_nickname(bot, ev):
+    msg = ''
+    try:
+        args = ev.message.extract_plain_text().split()
+        if len(args) == 2:
+            origin_name = str(args[0])
+            nick_name = str(args[1])
+
+            result = await get_ship_data_by_name(origin_name)
+
+            flag = await AddName(str(result['id']),nick_name)
+            if flag != 0:
+                msg = "查无此船，请输入正确的舰船名称"
+            else:
+                msg = '成功为'+origin_name+'添加一个新昵称：'+nick_name
+            await bot.send(ev, str(msg), at_sender=True)
+        else:
+            msg = "参数错误，命令需形如: blhx备注 正式船名 昵称"
+            await bot.send(ev, str(msg), at_sender=True)
+        return
+    except:
+        msg = '处理出错，请看日志'
+        traceback.print_exc()
+        await bot.send(ev,str(msg), at_sender=True)
+        return
+
+
+@sv.on_prefix('blhx移除备注')
+async def remove_nickname(bot, ev):
+    if not priv.check_priv(ev, priv.SUPERUSER):
+        await bot.send(ev, '仅限主人做这种事情~', at_sender=True)
+        return
+    msg = ''
+    try:
+        args = ev.message.extract_plain_text().split()
+        if len(args) == 2:
+            origin_name = str(args[0])
+            nick_name = str(args[1])
+
+            result = await get_ship_data_by_name(origin_name)
+
+            flag = await DelName(str(result['id']), nick_name)
+
+            if flag != 0:
+                msg = "此船无此昵称"
+            else:
+                msg = '成功为'+origin_name+'移除一个昵称：'+nick_name
+            await bot.send(ev, str(msg), at_sender=True)
+        else:
+            msg = "参数错误，命令需形如: blhx移除备注 正式船名 昵称"
+            await bot.send(ev, str(msg), at_sender=True)
+        return
+    except:
+        msg = '处理出错，请看日志'
+        traceback.print_exc()
+        await bot.send(ev,str(msg), at_sender=True)
+        return
+
+
+
