@@ -38,6 +38,24 @@ async def get_ship_data_by_name(name):
 
 
 """
+方法名：get_ship_data_by_id
+参数：name(string)
+返回值：result(字典)
+说明：该方法作用是通过碧蓝航线api，用舰船id获取舰船数据，返回一个数据字典供html适配数据调用
+"""
+
+async def get_ship_data_by_id(id):
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'ships.json')), 'r',
+                encoding='utf-8') as load_f:
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
+    for result in load_dict:
+        if str(result['id']) == str(id):
+            return result
+        else:
+            continue
+    return None
+"""
 方法名：format_data_into_html
 参数：data(字典)
 返回值：无
@@ -60,7 +78,8 @@ async def format_data_into_html(data):
         if str(data['id']) == str(load_dict[i]['编号']):
             data_plus = load_dict[i]
             break
-
+    # 舰船id
+    ship_id = str(data['id'])
     # 船名
     ship_name = str(data['names']['code']) + "【" + str(data['names']['cn']) + "】"
     soup.find(id='ship_name').string = ship_name
@@ -68,8 +87,9 @@ async def format_data_into_html(data):
     # 头像 avatar = "<img src='" + str(data['thumbnail']) + "'/>"
     # soup.find(id='avatar').img.replace_with(soup.new_tag("img", src=str(data['thumbnail']).replace(
     #     "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")))
-    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + pinyin(
-        str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '.png'))
+    # soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + pinyin(
+    #     str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '.png'))
+    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + ship_id + '.png'))
 
     # 建造时长
     building_time = str(data['construction']['constructionTime'])
@@ -945,8 +965,10 @@ async def format_data_into_html(data):
         retrofit_soup.find(id='type').append(retrofit_soup.new_tag("br"))
         retrofit_soup.find(id='type').append(str(retrofitHullType[0]))
 
-        retrofit_soup.find(id='avatar').img.replace_with(retrofit_soup.new_tag("img", src="images/Texture2D/" + pinyin(
-            str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '_g.png'))
+        # retrofit_soup.find(id='avatar').img.replace_with(retrofit_soup.new_tag("img", src="images/Texture2D/" + pinyin(
+        #     str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '_g.png'))
+        retrofit_soup.find(id='avatar').img.replace_with(
+            retrofit_soup.new_tag("img", src="images/Texture2D/" + ship_id + '_g.png'))
         async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_retrofit.html')),
                   'w', encoding="utf-8") as fp:
             await fp.write(str(retrofit_soup.prettify()))
@@ -963,12 +985,12 @@ async def format_data_into_html(data):
 """
 
 
-async def get_ship_skin_by_name(ship_name, skin_name):
+async def get_ship_skin_by_id(id, skin_name):
     soup = BeautifulSoup(
         open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
              encoding='UTF-8'),
         "lxml")
-    result = await get_ship_data_by_name(str(ship_name))
+    result = await get_ship_data_by_id(str(id))
     ship_skin_list = result['skins']
     image_path = ''
     background_path = ''
@@ -1062,6 +1084,43 @@ async def get_ship_skin_by_name(ship_name, skin_name):
         except:
             continue
     return 4
+
+
+
+async def get_ship_skin_by_id_with_index(id, index):
+    soup = BeautifulSoup(
+        open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+             encoding='UTF-8'),
+        "lxml")
+    result = await get_ship_data_by_id(str(id))
+    ship_skin_list = result['skins']
+    image_path = ''
+    background_path = ''
+    chibi_path = ''
+    # 处理原皮
+    if index > len(ship_skin_list):
+        return -1
+    else:
+        image_path = str(ship_skin_list[index]['image']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+        background_path = str(ship_skin_list[index]['background']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+        chibi_path = str(ship_skin_list[index]['chibi']).replace(
+            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")
+
+        soup.find(id='img-content')['style'] = "background-image: url('" + background_path + "')"
+        soup.find(id='img-content').string = ''
+        soup.find(id='img-content').append(soup.new_tag('img', src=image_path, style="height: 720px"))
+        soup.find(id='img-content').append(
+            soup.new_tag('img', src=chibi_path, style="position: fixed;bottom: 0;left: 0;"))
+        os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html'))
+        async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_skin.html')),
+                  'w', encoding="utf-8") as fp:
+            await fp.write(str(soup.prettify()))
+        return 0
+
+
+
 
 
 """
