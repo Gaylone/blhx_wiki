@@ -1,6 +1,7 @@
 import json
 import os
 import random
+from random import choice
 import aiofiles
 import requests
 from azurlane import AzurAPI
@@ -16,6 +17,23 @@ VERSION_INFO = f"{MAIN_URL}/azurapi-js-setup/master/version-info.json"
 MEMORIES_INFO = f"{MAIN_URL}/azurapi-js-setup/master/memories.json"
 AVAILABLE_LANGS = ["en", "cn", "jp", "kr", "code", "official"]
 SAVE_PATH = os.path.dirname(__file__)
+
+
+async def get_ship_id_by_name(name):
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'azurapi_data', 'ships.json')), 'r',
+                encoding='utf-8') as load_f:
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
+        id = None
+
+        for result in load_dict:
+            if str(result['names']['cn']) == str(name):
+                id = (result['id'])
+            else:
+                continue
+    return id
+
+
 """
 方法名：get_ship_data_by_name
 参数：name(string)
@@ -1206,3 +1224,77 @@ def get_recent_event():
         return base_url+str(div_list.a['href'])
     else:
         return None
+
+
+async def gacha_heavy_10():
+    gacha_result = []
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'gacha_data', 'pools.json')),
+                             'r',
+                             encoding='UTF-8') as load_f:
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
+        for i in range(0,10):
+            flag = random.randint(0,99)
+            if flag < 7:
+                superRare= await get_ship_id_by_name (choice(load_dict['HeavyShipBuildingListSuperRare']))
+                gacha_result.append({'id':superRare})
+            if 7 <= flag < 19:
+                elite = await get_ship_id_by_name (choice(load_dict['HeavyShipBuildingListElite']))
+                gacha_result.append({'id': elite})
+            if 19 <= flag < 45:
+                rare = await get_ship_id_by_name (choice(load_dict['HeavyShipBuildingListRare']))
+                gacha_result.append({'id': rare})
+            if 45 <= flag < 100:
+                normal = await get_ship_id_by_name (choice(load_dict['HeavyShipBuildingListNormal']))
+                gacha_result.append({'id': normal})
+    return gacha_result
+
+
+
+async def gacha_special_10():
+    gacha_result = []
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'gacha_data', 'pools.json')),
+                             'r',
+                             encoding='UTF-8') as load_f:
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
+        for i in range(0,10):
+            flag = random.randint(0,99)
+            if flag < 7:
+                superRare= await get_ship_id_by_name (choice(load_dict['SpecialShipBuildingListSuperRare']))
+                gacha_result.append({'id':superRare})
+            if 7 <= flag < 19:
+                elite = await get_ship_id_by_name (choice(load_dict['SpecialShipBuildingListElite']))
+                gacha_result.append({'id': elite})
+            if 19 <= flag < 45:
+                rare = await get_ship_id_by_name (choice(load_dict['SpecialShipBuildingListRare']))
+                gacha_result.append({'id': rare})
+            if 45 <= flag < 100:
+                normal = await get_ship_id_by_name (choice(load_dict['SpecialShipBuildingListNormal']))
+                gacha_result.append({'id': normal})
+    return gacha_result
+
+
+
+async def gacha_light_10():
+    gacha_result = []
+    async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'gacha_data', 'pools.json')),
+                             'r',
+                             encoding='UTF-8') as load_f:
+        load_dict = await load_f.read()
+        load_dict = json.loads(load_dict)
+        for i in range(0,10):
+            flag = random.randint(0,99)
+            if flag < 7:
+                superRare= await get_ship_id_by_name (choice(load_dict['LightShipBuildingListSuperRare']))
+                gacha_result.append({'id':superRare})
+            if 7 <= flag < 19:
+                elite = await get_ship_id_by_name (choice(load_dict['LightShipBuildingListElite']))
+                gacha_result.append({'id': elite})
+            if 19 <= flag < 45:
+                rare = await get_ship_id_by_name (choice(load_dict['LightShipBuildingListRare']))
+                gacha_result.append({'id': rare})
+            if 45 <= flag < 100:
+                normal = await get_ship_id_by_name (choice(load_dict['LightShipBuildingListNormal']))
+                gacha_result.append({'id': normal})
+    return gacha_result

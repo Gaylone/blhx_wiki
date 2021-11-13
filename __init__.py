@@ -2,11 +2,13 @@ import shutil
 import traceback
 import urllib.parse
 import aiofiles
+
 from hoshino.typing import MessageSegment
 from hoshino import Service, priv
 
 import os
 
+from .draw import GachaImage
 from .names import *
 from .tools import *
 from .AzurlaneAPI import *
@@ -258,3 +260,35 @@ async def quick_search_skin(bot, ev):
         traceback.print_exc()
         await bot.send(ev, str(msg), at_sender=True)
         return
+
+
+
+@sv.on_prefix('blhx大建')
+async def building(bot, ev):
+    try:
+        args = ev.message.extract_plain_text().split()
+        if len(args) == 1:
+            if str(args[0]) == '轻型':
+                data = await gacha_light_10()
+                img = GachaImage(data)
+                cq = await img.Make()
+                await bot.send(ev,cq,at_sender=True)
+            if str(args[0]) == '重型':
+                data = await gacha_heavy_10()
+                img = GachaImage(data)
+                cq = await img.Make()
+                await bot.send(ev, cq, at_sender=True)
+            if str(args[0]) == '特型':
+                data = await gacha_special_10()
+                img = GachaImage(data)
+                cq = await img.Make()
+                await bot.send(ev, cq, at_sender=True)
+        else:
+            await bot.send(ev, '指令错误 发送blhx大建 轻型/重型/特型 进行大建模拟', at_sender=True)
+            return
+    except :
+        msg = '处理出错，请看日志'
+        traceback.print_exc()
+        await bot.send(ev, str(msg), at_sender=True)
+        return
+
