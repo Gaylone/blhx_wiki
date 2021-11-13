@@ -1234,17 +1234,17 @@ async def gacha_heavy_10():
         load_dict = await load_f.read()
         load_dict = json.loads(load_dict)
         for i in range(0,10):
-            flag = random.randint(0,99)
-            if flag < 7:
+            flag = random.randint(0,999)
+            if flag < 70:
                 superRare= await get_ship_id_by_name (choice(load_dict['HeavyShipBuildingListSuperRare']))
                 gacha_result.append({'id':superRare})
-            if 7 <= flag < 19:
+            if 70 <= flag < 190:
                 elite = await get_ship_id_by_name (choice(load_dict['HeavyShipBuildingListElite']))
                 gacha_result.append({'id': elite})
-            if 19 <= flag < 45:
+            if 190 <= flag < 450:
                 rare = await get_ship_id_by_name (choice(load_dict['HeavyShipBuildingListRare']))
                 gacha_result.append({'id': rare})
-            if 45 <= flag < 100:
+            if 450 <= flag < 1000:
                 normal = await get_ship_id_by_name (choice(load_dict['HeavyShipBuildingListNormal']))
                 gacha_result.append({'id': normal})
     return gacha_result
@@ -1259,17 +1259,17 @@ async def gacha_special_10():
         load_dict = await load_f.read()
         load_dict = json.loads(load_dict)
         for i in range(0,10):
-            flag = random.randint(0,99)
-            if flag < 7:
+            flag = random.randint(0,999)
+            if flag < 70:
                 superRare= await get_ship_id_by_name (choice(load_dict['SpecialShipBuildingListSuperRare']))
                 gacha_result.append({'id':superRare})
-            if 7 <= flag < 19:
+            if 70 <= flag < 190:
                 elite = await get_ship_id_by_name (choice(load_dict['SpecialShipBuildingListElite']))
                 gacha_result.append({'id': elite})
-            if 19 <= flag < 45:
+            if 190 <= flag < 450:
                 rare = await get_ship_id_by_name (choice(load_dict['SpecialShipBuildingListRare']))
                 gacha_result.append({'id': rare})
-            if 45 <= flag < 100:
+            if 450 <= flag < 1000:
                 normal = await get_ship_id_by_name (choice(load_dict['SpecialShipBuildingListNormal']))
                 gacha_result.append({'id': normal})
     return gacha_result
@@ -1284,17 +1284,17 @@ async def gacha_light_10():
         load_dict = await load_f.read()
         load_dict = json.loads(load_dict)
         for i in range(0,10):
-            flag = random.randint(0,99)
-            if flag < 7:
+            flag = random.randint(0,999)
+            if flag < 70:
                 superRare= await get_ship_id_by_name (choice(load_dict['LightShipBuildingListSuperRare']))
                 gacha_result.append({'id':superRare})
-            if 7 <= flag < 19:
+            if 70 <= flag < 190:
                 elite = await get_ship_id_by_name (choice(load_dict['LightShipBuildingListElite']))
                 gacha_result.append({'id': elite})
-            if 19 <= flag < 45:
+            if 190 <= flag < 450:
                 rare = await get_ship_id_by_name (choice(load_dict['LightShipBuildingListRare']))
                 gacha_result.append({'id': rare})
-            if 45 <= flag < 100:
+            if 450 <= flag < 1000:
                 normal = await get_ship_id_by_name (choice(load_dict['LightShipBuildingListNormal']))
                 gacha_result.append({'id': normal})
     return gacha_result
