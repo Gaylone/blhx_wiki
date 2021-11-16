@@ -92,22 +92,26 @@ async def format_data_into_html(data):
         load_dict = await load_f.read()
         load_dict = json.loads(load_dict)
     data_plus = {}
-    for i in range(0, len(load_dict)):
-        if str(data['id']) == str(load_dict[i]['编号']):
-            data_plus = load_dict[i]
-            break
-    # 舰船id
-    ship_id = str(data['id'])
+    try:
+        for i in range(0, len(load_dict)):
+            if str(data['id']) == str(load_dict[i]['编号']):
+                data_plus = load_dict[i]
+                break
+    except:
+        pass
+
     # 船名
-    ship_name = str(data['names']['code']) + "【" + str(data['names']['cn']) + "】"
+    try:
+        ship_name = str(data['names']['code']) + "【" + str(data['names']['cn']) + "】"
+    except:
+        ship_name = str(data['names'])
     soup.find(id='ship_name').string = ship_name
 
     # 头像 avatar = "<img src='" + str(data['thumbnail']) + "'/>"
     # soup.find(id='avatar').img.replace_with(soup.new_tag("img", src=str(data['thumbnail']).replace(
     #     "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")))
-    # soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + pinyin(
-    #     str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '.png'))
-    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + ship_id + '.png'))
+    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + pinyin(
+        str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '.png'))
 
     # 建造时长
     building_time = str(data['construction']['constructionTime'])
@@ -658,11 +662,14 @@ async def format_data_into_html(data):
     skills = data['skills']
     skill_text = ''
     soup.find(id='skill').clear()
-    for i in range(0, len(skills)):
-        skill_text += ("<tr><td ><img src='" + str(skills[i]['icon']).replace(
-            "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "") \
-                       + "' width='60px' height='60px'/>" + str(skills[i]['names']['cn']) \
-                       + "</td></tr><tr><td>" + str(data_plus.get('技能', [{},{},{},{},{},{}])[i].get('效果',str(skills[i]['description']))) + "</td></tr>")  # 被逼无奈只能这样
+    try:
+        for i in range(0, len(skills)):
+            skill_text += ("<tr><td ><img src='" + str(skills[i]['icon']).replace(
+                "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "") \
+                           + "' width='60px' height='60px'/>" + str(skills[i]['names']['cn']) \
+                           + "</td></tr><tr><td>" + str(data_plus.get('技能', [{},{},{},{},{},{}])[i].get('效果',str(skills[i]['description']))) + "</td></tr>")  # 被逼无奈只能这样
+    except:
+        pass
     extraSoup = BeautifulSoup(skill_text, "lxml")
     soup.find(id='skill').append(extraSoup)
 
@@ -983,17 +990,14 @@ async def format_data_into_html(data):
         retrofit_soup.find(id='type').append(retrofit_soup.new_tag("br"))
         retrofit_soup.find(id='type').append(str(retrofitHullType[0]))
 
-        # retrofit_soup.find(id='avatar').img.replace_with(retrofit_soup.new_tag("img", src="images/Texture2D/" + pinyin(
-        #     str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '_g.png'))
-        retrofit_soup.find(id='avatar').img.replace_with(
-            retrofit_soup.new_tag("img", src="images/Texture2D/" + ship_id + '_g.png'))
+        retrofit_soup.find(id='avatar').img.replace_with(retrofit_soup.new_tag("img", src="images/Texture2D/" + pinyin(
+            str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '_g.png'))
         async with aiofiles.open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ship_html', 'ship_retrofit.html')),
                   'w', encoding="utf-8") as fp:
             await fp.write(str(retrofit_soup.prettify()))
         return 1  # 1可以改造，就去适配改造数据
     else:
         return 0  # 0不可以改造，就跳过
-
 
 """
 方法名：get_ship_skin_by_name
