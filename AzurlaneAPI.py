@@ -110,8 +110,7 @@ async def format_data_into_html(data):
     # 头像 avatar = "<img src='" + str(data['thumbnail']) + "'/>"
     # soup.find(id='avatar').img.replace_with(soup.new_tag("img", src=str(data['thumbnail']).replace(
     #     "https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "")))
-    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + pinyin(
-        str(data['names']['cn']).replace("·", "").replace("-", "").replace(" ", "").replace(".", "")) + '.png'))
+    soup.find(id='avatar').img.replace_with(soup.new_tag("img", src="images/Texture2D/" + await get_ship_id_by_name(str(data['names']['cn'])) + '.png'))
 
     # 建造时长
     building_time = str(data['construction']['constructionTime'])
