@@ -1167,7 +1167,7 @@ def get_random_gallery():
 
 
 def get_pve_recommendation():
-    url = "https://wiki.biligame.com/blhx/PVE%E7%94%A8%E8%88%B0%E8%88%B9%E7%BB%BC%E5%90%88%E6%80%A7%E8%83%BD%E5%BC%BA%E5%BA%A6%E6%A6%9C"
+    url = "https://wiki.biligame.com/blhx/%E4%BA%95%E5%8F%B7%E7%A2%A7%E8%93%9D%E6%A6%9C%E5%90%88%E9%9B%86"
     response = requests.get(url, headers=header)
     soup = BeautifulSoup(response.text, "lxml")
     div_list = soup.find_all(class_='floatnone')
