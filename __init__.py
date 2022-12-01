@@ -120,7 +120,9 @@ async def send_random_gallery(bot, ev):
 @sv.on_fullmatch('blhx 强度榜')
 async def send_pve_recommendation(bot, ev):
     div_list = get_pve_recommendation()
-    div_text = ["强度标准\n", "强度榜\n", "冷无缺榜\n", "强度副榜\n", "联动强度榜\n", "科研船过度阶段强度\n"]
+    div_text = ["认知觉醒推荐榜(主线)\n", "认知觉醒推荐榜(大世界)\n", "装备榜\n", "萌新入坑舰船推荐榜\n", "萌新初期装备榜\n",
+                "兵装推荐榜\n", "专武推荐榜\n", "兑换装备推荐榜\n", "研发装备推荐榜\n", "改造推荐榜\n", "跨队舰船推荐榜\n",
+                "氪金榜\n"]
     msg = "仅代表个人观点，完全不等于绝对客观，可能存在各种主观评判或者真爱加成，不过目标是努力去进行符合环境需求的客观评定\n"
     msg_list = []
     if len(div_list) != 0:
