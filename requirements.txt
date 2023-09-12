@@ -1,0 +1,6 @@
+azurlane
+imgkit
+beautifulsoup4
+opencv-python
+aiofiles
+pypinyin
